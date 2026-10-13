@@ -1,0 +1,53 @@
+[gd_resource type="Resource" script_class="WildGameConfig" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/domain/game_config.gd" id="1_config"]
+[ext_resource type="Resource" path="res://data/health_config.tres" id="2_health"]
+[ext_resource type="Resource" path="res://data/skill_catalog.tres" id="3_skills"]
+
+[resource]
+script = ExtResource("1_config")
+health_rules = ExtResource("2_health")
+skill_rules = ExtResource("3_skills")
+design_version = "0.2"
+save_version = 1
+generator_version = 1
+protocol_version = 1
+game_seconds_per_real_second = 120.0
+simulation_step_seconds = 60.0
+target_survival_hours = 168.0
+backpack_grid = Vector2i(8, 6)
+backpack_capacity_l = 30.0
+backpack_empty_weight_kg = 0.8
+warehouse_grid = Vector2i(12, 10)
+warehouse_capacity_l = 120.0
+camp_storage_grid = Vector2i(6, 6)
+camp_storage_capacity_l = 40.0
+soft_weight_limit_kg = 18.0
+hard_weight_limit_kg = 30.0
+maximum_weight_slowdown = 0.35
+maximum_weight_stamina_penalty = 0.75
+initial_stat_value = 100.0
+nutrition_consumption_per_hour = PackedFloat32Array(4, 1.5, 2, 1.2, 1)
+water_consumption_per_hour = 4.0
+sleeping_water_consumption_per_hour = 2.0
+working_water_consumption_per_hour = 6.0
+hydration_per_half_litre = 25.0
+sprint_stamina_per_game_minute = 4.0
+idle_stamina_recovery_per_game_minute = 2.0
+resting_stamina_recovery_per_game_minute = 4.0
+wilderness_grid = Vector2i(128, 128)
+terrain_tile_pixels = 32
+generation_max_attempts = 5
+terrain_noise_frequency = 0.035
+minimum_connected_land_ratio = 0.8
+spawn_food_path_tiles = 8
+spawn_wood_path_tiles = 10
+spawn_water_path_tiles = 12
+exploration_autosave_seconds = 120.0
+walking_speed_pixels_per_second = 96.0
+sprinting_speed_pixels_per_second = 144.0
+exhausted_speed_pixels_per_second = 72.0
+starting_currency = 600
+success_base_reward = 600
+maximum_cooperative_players = 4
+default_network_port = 7000

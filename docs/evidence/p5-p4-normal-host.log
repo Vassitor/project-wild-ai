@@ -1,0 +1,32 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+host UDP port 49696
+host 1037 ms PASS isolated health room
+host status 房间已创建，等待第二位玩家
+host 1087 ms PASS health ENet server
+host peer connected 1401422599
+host 3949 ms PASS health client handshake
+host request start => OK
+host 4060 ms PASS health host start
+host 4145 ms PASS compact unreliable frame stays below MTU budget
+host 8286 ms PASS remote bandage completed
+host 8286 ms PASS private treatment affects guest only
+host 8287 ms PASS bandage conservation and retry dedup
+host 15124 ms PASS remote medicine complete
+host 15124 ms PASS medicine consumed once
+host 15124 ms PASS authoritative six hour treatment and cooldown
+host status client 断线，角色留在原地
+host 15364 ms PASS health client disconnect
+host 15397 ms PASS offline one hour course advancement
+host 15397 ms PASS existing course not rerolled offline
+host peer connected 922872298
+host 17573 ms PASS original member reconnects
+host 17573 ms PASS reconnect no actor or medicine duplication
+host 17605 ms PASS health checkpoint
+host 17706 ms PASS health room restore
+host 17706 ms PASS restore includes RNG and all health timers
+host 18097 ms PASS health final agreement
+host 18123 ms PASS health end saved
+host status client 断线，角色留在原地
+host transport status 2, peers [], sent 134, received 199
+P4 ENet host: 21 passed, 0 failed

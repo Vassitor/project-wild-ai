@@ -1,0 +1,60 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+client UDP port 65374
+client status 正在连接房主…
+client 2 ms PASS progression ENet client
+client peer connected 1
+client status 已进入共享荒野
+client 541 ms PASS progression welcome
+client 1148 ms PASS lobby learning stage
+client request guest-school => OK
+client 1259 ms PASS bound lobby learning despite payload actor
+client request guest-school => OK
+client 1314 ms PASS learning receipt replay
+client request guest-trap => OK
+client 1425 ms PASS personal second lobby node
+client 1657 ms PASS fish stage
+client 1657 ms PASS client private growth / currency view
+client request guest-fish => OK
+client 1758 ms PASS real remote fishing
+client 17131 ms PASS remote fish completion XP snapshot
+client request guest-fish => OK
+client 17241 ms PASS completed fish start replay
+client request forged-growth => SKILL_PREREQUISITE
+client 17311 ms PASS client cannot submit forged experience or skipped tier
+client request fish-done => OK
+client 18506 ms PASS expansion stage
+client request guest-upgrade-race => SITE_RESERVED
+client 18664 ms PASS remote expansion race feedback
+client request upgrade-raced => OK
+client request upgrade-raced => OK
+client request upgrade-raced => OK
+client 20928 ms PASS trap waiting stage
+client 20929 ms PASS shared expanded footprint visible
+client 20929 ms PASS future trap random sequence not sent to client
+client 22189 ms PASS live skill menu leaves world clock running
+client request menu-checked => OK
+client 23036 ms PASS actual capture stage
+client request guest-catch => OK
+client 23198 ms PASS remote actual capture collection
+client 26115 ms PASS collector XP and loot completion
+client request guest-catch => OK
+client 26163 ms PASS collection receipt replay
+client request second-catch => TRAP_EMPTY
+client 26286 ms PASS same prey cannot be collected twice
+client request catch-done => OK
+client 26619 ms PASS growth reconnect stage
+client status 房主已断开；可使用原身份重连
+client status 正在连接房主…
+client 28607 ms PASS growth reconnect client
+client peer connected 1
+client status 已进入共享荒野
+client 28839 ms PASS growth reconnect welcome
+client 28840 ms PASS reconnect retains nodes / both XP branches
+client request rejoined-done => OK
+client 29335 ms PASS growth finish stage
+client request ready-end => OK
+client 29445 ms PASS terminal receipt resolves final committed request
+client 29445 ms PASS growth ending received
+client transport status 2, peers [1], sent 569, received 274
+P5 ENet client: 30 passed, 0 failed

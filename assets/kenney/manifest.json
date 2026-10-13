@@ -1,0 +1,481 @@
+{
+  "pine": {
+    "sheet": "rpg",
+    "cells": [
+      [
+        15,
+        10
+      ],
+      [
+        15,
+        11
+      ]
+    ],
+    "layout": [
+      16,
+      32
+    ],
+    "adaptation": "gap removal / composition only"
+  },
+  "tree": {
+    "sheet": "rpg",
+    "cells": [
+      [
+        13,
+        9
+      ],
+      [
+        13,
+        11
+      ]
+    ],
+    "layout": [
+      16,
+      32
+    ],
+    "adaptation": "gap removal / composition only"
+  },
+  "bush": {
+    "sheet": "rpg",
+    "cells": [
+      [
+        23,
+        10
+      ],
+      [
+        23,
+        11
+      ]
+    ],
+    "layout": [
+      16,
+      32
+    ],
+    "adaptation": "gap removal / composition only"
+  },
+  "rock": {
+    "sheet": "rpg",
+    "cells": [
+      [
+        8,
+        18
+      ]
+    ],
+    "layout": null,
+    "adaptation": "gap removal / composition only"
+  },
+  "herb": {
+    "sheet": "rpg",
+    "cells": [
+      [
+        28,
+        10
+      ]
+    ],
+    "layout": null,
+    "adaptation": "gap removal / composition only"
+  },
+  "fiber": {
+    "sheet": "rpg",
+    "cells": [
+      [
+        22,
+        10
+      ]
+    ],
+    "layout": null,
+    "adaptation": "gap removal / composition only"
+  },
+  "root": {
+    "sheet": "rpg",
+    "cells": [
+      [
+        54,
+        13
+      ]
+    ],
+    "layout": null,
+    "adaptation": "gap removal / composition only"
+  },
+  "branch": {
+    "sheet": "rpg",
+    "cells": [
+      [
+        27,
+        11
+      ]
+    ],
+    "layout": null,
+    "adaptation": "lower deadwood tile rotated 90 degrees"
+  },
+  "fish": {
+    "sheet": "rpg",
+    "cells": [
+      [
+        56,
+        12
+      ]
+    ],
+    "layout": null,
+    "adaptation": "gap removal / composition only"
+  },
+  "spring": {
+    "sheet": "rpg",
+    "cells": [
+      [
+        50,
+        9
+      ]
+    ],
+    "layout": null,
+    "adaptation": "gap removal / composition only"
+  },
+  "campfire": {
+    "sheet": "rpg",
+    "cells": [
+      [
+        14,
+        8
+      ]
+    ],
+    "layout": null,
+    "adaptation": "gap removal / composition only"
+  },
+  "sign": {
+    "sheet": "rpg",
+    "cells": [
+      [
+        21,
+        0
+      ]
+    ],
+    "layout": null,
+    "adaptation": "gap removal / composition only"
+  },
+  "target": {
+    "sheet": "rpg",
+    "cells": [
+      [
+        45,
+        0
+      ]
+    ],
+    "layout": null,
+    "adaptation": "gap removal / composition only"
+  },
+  "crate": {
+    "sheet": "rpg",
+    "cells": [
+      [
+        28,
+        2
+      ]
+    ],
+    "layout": null,
+    "adaptation": "gap removal / composition only"
+  },
+  "barrel": {
+    "sheet": "rpg",
+    "cells": [
+      [
+        23,
+        0
+      ]
+    ],
+    "layout": null,
+    "adaptation": "gap removal / composition only"
+  },
+  "bench": {
+    "sheet": "rpg",
+    "cells": [
+      [
+        20,
+        6
+      ]
+    ],
+    "layout": null,
+    "adaptation": "gap removal / composition only"
+  },
+  "ration": {
+    "sheet": "rpg",
+    "cells": [
+      [
+        55,
+        13
+      ]
+    ],
+    "layout": null,
+    "adaptation": "gap removal / composition only"
+  },
+  "bottle": {
+    "sheet": "rpg",
+    "cells": [
+      [
+        54,
+        12
+      ]
+    ],
+    "layout": null,
+    "adaptation": "gap removal / composition only"
+  },
+  "herbal_medicine": {
+    "sheet": "rpg",
+    "cells": [
+      [
+        55,
+        12
+      ]
+    ],
+    "layout": null,
+    "adaptation": "gap removal / composition only"
+  },
+  "stew": {
+    "sheet": "rpg",
+    "cells": [
+      [
+        56,
+        15
+      ]
+    ],
+    "layout": null,
+    "adaptation": "gap removal / composition only"
+  },
+  "bandage": {
+    "sheet": "rpg",
+    "cells": [
+      [
+        54,
+        13
+      ]
+    ],
+    "layout": null,
+    "adaptation": "gap removal / composition only"
+  },
+  "rope": {
+    "sheet": "rpg",
+    "cells": [
+      [
+        51,
+        12
+      ]
+    ],
+    "layout": null,
+    "adaptation": "gap removal / composition only"
+  },
+  "hide": {
+    "sheet": "rpg",
+    "cells": [
+      [
+        25,
+        2
+      ]
+    ],
+    "layout": null,
+    "adaptation": "gap removal / composition only"
+  },
+  "berry": {
+    "sheet": "rpg",
+    "cells": [
+      [
+        54,
+        14
+      ]
+    ],
+    "layout": null,
+    "adaptation": "gap removal / composition only"
+  },
+  "raw_meat": {
+    "sheet": "rpg",
+    "cells": [
+      [
+        55,
+        14
+      ]
+    ],
+    "layout": null,
+    "adaptation": "gap removal / composition only"
+  },
+  "fishing_kit": {
+    "sheet": "rpg",
+    "cells": [
+      [
+        52,
+        16
+      ]
+    ],
+    "layout": null,
+    "adaptation": "gap removal / composition only"
+  },
+  "knife": {
+    "sheet": "characters",
+    "cells": [
+      [
+        44,
+        0
+      ]
+    ],
+    "layout": null,
+    "adaptation": "gap removal / composition only"
+  },
+  "axe": {
+    "sheet": "characters",
+    "cells": [
+      [
+        49,
+        0
+      ]
+    ],
+    "layout": null,
+    "adaptation": "gap removal / composition only"
+  },
+  "bow": {
+    "sheet": "characters",
+    "cells": [
+      [
+        53,
+        0
+      ]
+    ],
+    "layout": null,
+    "adaptation": "gap removal / composition only"
+  },
+  "arrow": {
+    "sheet": "characters",
+    "cells": [
+      [
+        42,
+        0
+      ]
+    ],
+    "layout": null,
+    "adaptation": "gap removal / composition only"
+  },
+  "leather_armor": {
+    "sheet": "characters",
+    "cells": [
+      [
+        6,
+        4
+      ]
+    ],
+    "layout": null,
+    "adaptation": "gap removal / composition only"
+  },
+  "explorer": {
+    "sheet": "characters",
+    "cells": [
+      [
+        0,
+        0
+      ],
+      [
+        6,
+        5
+      ],
+      [
+        19,
+        0
+      ],
+      [
+        3,
+        0
+      ]
+    ],
+    "layout": null,
+    "adaptation": "gap removal / composition only"
+  },
+  "supply": {
+    "sheet": "rpg",
+    "cells": [
+      [
+        34,
+        21
+      ],
+      [
+        39,
+        21
+      ],
+      [
+        35,
+        21
+      ],
+      [
+        34,
+        14
+      ],
+      [
+        35,
+        14
+      ],
+      [
+        36,
+        14
+      ],
+      [
+        36,
+        5
+      ]
+    ],
+    "adaptation": "3x2 cabin composition with door"
+  },
+  "storage": {
+    "sheet": "rpg",
+    "cells": [
+      [
+        27,
+        21
+      ],
+      [
+        32,
+        21
+      ],
+      [
+        28,
+        21
+      ],
+      [
+        34,
+        14
+      ],
+      [
+        35,
+        14
+      ],
+      [
+        36,
+        14
+      ],
+      [
+        36,
+        5
+      ]
+    ],
+    "adaptation": "3x2 cabin composition with door"
+  },
+  "terrain": {
+    "sheet": "rpg",
+    "cells": [
+      [
+        5,
+        0
+      ],
+      [
+        9,
+        1
+      ],
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        1
+      ]
+    ],
+    "adaptation": "nearest 2x scale; luminance-mapped forest RGB 52/78/57; grass 87/111/65; water brightness 0.72"
+  }
+}

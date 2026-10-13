@@ -1,0 +1,54 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+client UDP port 65126
+client status 正在连接房主…
+client 4 ms PASS ENet localhost client
+client peer connected 1
+client status 已进入共享荒野
+client 322 ms PASS complete map snapshot handshake
+client 395 ms PASS host map decoded, no local regeneration
+client 395 ms PASS private snapshot boundary
+client 1155 ms PASS movement stage
+client request move-done => OK
+client 3114 ms PASS gather contention stage
+client request race-gather => RESOURCE_RESERVED
+client 3341 ms PASS remote resource lock feedback
+client request gather-raced => OK
+client 26890 ms PASS build contention stage
+client request race-build => SITE_RESERVED
+client 27154 ms PASS remote footprint lock feedback
+client request build-raced => OK
+client 72518 ms PASS public box stage
+client 72518 ms PASS public box snapshot visible nearby
+client request withdraw => OK
+client 73919 ms PASS reliable transaction recovered from app loss
+client request withdraw => OK
+client 74075 ms PASS same request replay successful
+client request box-done => OK
+client 74529 ms PASS menu stage
+client 75729 ms PASS personal menu leaves authoritative time running
+client request menu-done => OK
+client 76063 ms PASS disconnect stage
+client request cancel-offline => OK
+client 76273 ms PASS start before disconnect
+client status 房主已断开；可使用原身份重连
+client status 正在连接房主…
+client peer connected 1
+client status 连接被拒绝：ROSTER_LOCKED
+client status 连接被拒绝：ROSTER_LOCKED
+client 77998 ms PASS late new member rejected over network
+client status 正在连接房主…
+client 78000 ms PASS reconnect ENet client
+client peer connected 1
+client status 已进入共享荒野
+client 78328 ms PASS reconnect secret accepted
+client 78328 ms PASS reconnect snapshot no new actor or unfinished action
+client request reconnect-done => OK
+client 78665 ms PASS final agreement stage
+client 78665 ms PASS client authoritative inventory matches host
+client 78666 ms PASS 100 ms / 1% app fault injection exercised
+client 78666 ms PASS recorded remote command delay >= simulated RTT
+client request ready-end => OK
+client 78874 ms PASS host saved and ended notification
+client transport status 2, peers [1], sent 1587, received 711
+P3.5 ENet client: 26 passed, 0 failed

@@ -1,0 +1,58 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+host UDP port 52892
+host 456 ms PASS progression isolated room
+host status 房间已创建，等待第二位玩家
+host 477 ms PASS progression ENet server
+host peer connected 1017991717
+host 2555 ms PASS progression client handshake
+host request host-building => OK
+host 2632 ms PASS host lobby building learning
+host request host-trap => OK
+host 2688 ms PASS host lobby trap learning
+host 3853 ms PASS guest independently learns before departure
+host 3854 ms PASS individual validation learning charges
+host request start => OK
+host 3912 ms PASS progression start
+host 5002 ms PASS remote fishing begins
+host request host-fish-race => RESOURCE_RESERVED
+host 5046 ms PASS shared fish point exclusive
+host 5047 ms PASS rejected race rolls back immediate bait
+host 20812 ms PASS remote fishing completes normally
+host 20812 ms PASS fish output private and replay no duplicate
+host 20812 ms PASS XP executing actor only
+host 20895 ms PASS expandable camp real site
+host request host-camp => OK
+host 21037 ms PASS camp actual materials reserved
+host request host-upgrade => OK
+host 21367 ms PASS upgrade authority
+host 22390 ms PASS client expansion race attempted
+host 22391 ms PASS failed expansion race retains guest materials
+host 22574 ms PASS one expansion committed
+host 22574 ms PASS building XP owner of action
+host request host-trap-build => OK
+host 22866 ms PASS actual trap construction
+host request host-bait => OK
+host 23148 ms PASS trap takes actual bait
+host 26499 ms PASS cooperative skill menu tested
+host 26672 ms PASS offscreen six hour actual prey capture
+host 26976 ms PASS remote collect begins
+host request host-catch-race => BUILDING_RESERVED
+host 27000 ms PASS same capture lock
+host 30787 ms PASS guest one catch completes
+host 30788 ms PASS one loot set private
+host 30788 ms PASS collector earns trap XP independently
+host status client 断线，角色留在原地
+host 31010 ms PASS progression disconnect
+host peer connected 1441103078
+host 33327 ms PASS progression original member rejoined
+host 33354 ms PASS growth / population checkpoint
+host 33453 ms PASS growth and traps JSON room restore
+host 33457 ms PASS learned nodes and earned XP retain on host restore
+host 33457 ms PASS trap use retained without respawn
+host 33803 ms PASS progression final agreement
+host 33837 ms PASS progression saved end
+host 33838 ms PASS final confirmation deliberately lost before ending
+host status client 断线，角色留在原地
+host transport status 2, peers [], sent 316, received 391
+P5 ENet host: 39 passed, 0 failed

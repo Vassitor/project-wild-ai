@@ -1,0 +1,429 @@
+{
+  "pine": {
+    "source": "Backgrounds/Tilesets/TilesetNature.png",
+    "pixel_rect": [
+      0,
+      32,
+      48,
+      48
+    ],
+    "adaptation": "original pixels / crop"
+  },
+  "tree": {
+    "source": "Backgrounds/Tilesets/TilesetNature.png",
+    "pixel_rect": [
+      0,
+      0,
+      32,
+      32
+    ],
+    "adaptation": "original pixels / crop"
+  },
+  "tree_tall": {
+    "source": "Backgrounds/Tilesets/TilesetNature.png",
+    "pixel_rect": [
+      96,
+      0,
+      32,
+      32
+    ],
+    "adaptation": "original pixels / crop"
+  },
+  "stump": {
+    "source": "Backgrounds/Tilesets/TilesetNature.png",
+    "pixel_rect": [
+      0,
+      128,
+      32,
+      32
+    ],
+    "adaptation": "original pixels / crop"
+  },
+  "bush": {
+    "source": "Backgrounds/Tilesets/TilesetNature.png",
+    "pixel_rect": [
+      96,
+      128,
+      32,
+      32
+    ],
+    "adaptation": "original pixels / crop"
+  },
+  "berry": {
+    "source": "Backgrounds/Tilesets/TilesetNature.png",
+    "pixel_rect": [
+      48,
+      176,
+      16,
+      16
+    ],
+    "adaptation": "original pixels / crop"
+  },
+  "stone": {
+    "source": "Backgrounds/Tilesets/TilesetNature.png",
+    "pixel_rect": [
+      96,
+      224,
+      16,
+      16
+    ],
+    "adaptation": "original pixels / crop"
+  },
+  "stone_2": {
+    "source": "Backgrounds/Tilesets/TilesetNature.png",
+    "pixel_rect": [
+      112,
+      192,
+      16,
+      16
+    ],
+    "adaptation": "original pixels / crop"
+  },
+  "stone_3": {
+    "source": "Backgrounds/Tilesets/TilesetNature.png",
+    "pixel_rect": [
+      144,
+      192,
+      16,
+      16
+    ],
+    "adaptation": "original pixels / crop"
+  },
+  "herb": {
+    "source": "Backgrounds/Tilesets/TilesetNature.png",
+    "pixel_rect": [
+      96,
+      176,
+      16,
+      16
+    ],
+    "adaptation": "original pixels / crop"
+  },
+  "fiber": {
+    "source": "Backgrounds/Tilesets/TilesetNature.png",
+    "pixel_rect": [
+      64,
+      160,
+      16,
+      16
+    ],
+    "adaptation": "original pixels / crop"
+  },
+  "spring_pool": {
+    "source": [
+      "Backgrounds/Tilesets/TilesetNature.png",
+      "Backgrounds/Animated/Water Ripples/SpriteSheet16x16.png"
+    ],
+    "pixel_rects": [
+      [
+        160,
+        208,
+        16,
+        16
+      ],
+      [
+        0,
+        0,
+        16,
+        16
+      ]
+    ],
+    "adaptation": "water clipped to circular silhouette; original dark outline retained"
+  },
+  "berry_bush": {
+    "source": "Backgrounds/Tilesets/TilesetNature.png",
+    "pixel_rects": [
+      [
+        96,
+        128,
+        32,
+        32
+      ],
+      [
+        48,
+        176,
+        16,
+        16
+      ]
+    ],
+    "adaptation": "fruit over bush"
+  },
+  "supply": {
+    "source": "Backgrounds/Tilesets/TilesetHouse.png",
+    "pixel_rect": [
+      0,
+      0,
+      64,
+      48
+    ],
+    "adaptation": "original pixels / crop"
+  },
+  "storage": {
+    "source": "Backgrounds/Tilesets/TilesetHouse.png",
+    "pixel_rect": [
+      64,
+      0,
+      64,
+      48
+    ],
+    "adaptation": "original pixels / crop"
+  },
+  "crate": {
+    "source": "Backgrounds/Tilesets/TilesetHouse.png",
+    "pixel_rect": [
+      256,
+      288,
+      16,
+      16
+    ],
+    "adaptation": "original pixels / crop"
+  },
+  "barrel": {
+    "source": "Backgrounds/Tilesets/TilesetHouse.png",
+    "pixel_rect": [
+      256,
+      320,
+      16,
+      16
+    ],
+    "adaptation": "original pixels / crop"
+  },
+  "sign": {
+    "source": "Backgrounds/Tilesets/TilesetElement.png",
+    "pixel_rect": [
+      16,
+      80,
+      16,
+      16
+    ],
+    "adaptation": "original pixels / crop"
+  },
+  "target": {
+    "source": "Backgrounds/Tilesets/TilesetNature.png",
+    "pixel_rect": [
+      144,
+      128,
+      16,
+      16
+    ],
+    "adaptation": "original pixels / crop"
+  },
+  "bench": {
+    "source": "Backgrounds/Tilesets/TilesetElement.png",
+    "pixel_rect": [
+      128,
+      0,
+      16,
+      16
+    ],
+    "adaptation": "original pixels / crop"
+  },
+  "rope": {
+    "source": "Backgrounds/Tilesets/tileset_camp.png",
+    "pixel_rect": [
+      176,
+      112,
+      16,
+      16
+    ],
+    "adaptation": "original pixels / crop"
+  },
+  "hide": {
+    "source": "Backgrounds/Tilesets/tileset_camp.png",
+    "pixel_rect": [
+      128,
+      80,
+      32,
+      32
+    ],
+    "adaptation": "original pixels / crop"
+  },
+  "campfire": {
+    "source": "Backgrounds/Tilesets/tileset_camp.png",
+    "pixel_rect": [
+      96,
+      64,
+      16,
+      16
+    ],
+    "adaptation": "original pixels / crop"
+  },
+  "path": {
+    "source": "Backgrounds/Tilesets/TilesetFloor.png",
+    "pixel_rect": [
+      16,
+      128,
+      16,
+      16
+    ],
+    "adaptation": "original pixels / crop"
+  },
+  "knife": {
+    "source": "Items/Projectile/Kunai.png",
+    "pixel_rect": null,
+    "adaptation": "original pixels / crop"
+  },
+  "axe": {
+    "source": "Items/Weapons/AxeTool/Sprite.png",
+    "pixel_rect": null,
+    "adaptation": "original pixels / crop"
+  },
+  "flint": {
+    "source": "Items/Resource/Rock.png",
+    "pixel_rect": null,
+    "adaptation": "original pixels / crop"
+  },
+  "fishing_kit": {
+    "source": "Items/Weapons/Fishing Rod/Sprite.png",
+    "pixel_rect": null,
+    "adaptation": "original pixels / crop"
+  },
+  "bottle": {
+    "source": "Items/Potion/WaterPot.png",
+    "pixel_rect": null,
+    "adaptation": "original pixels / crop"
+  },
+  "ration": {
+    "source": "Items/Food/Onigiri.png",
+    "pixel_rect": null,
+    "adaptation": "original pixels / crop"
+  },
+  "bandage": {
+    "source": "Items/Potion/Medipack.png",
+    "pixel_rect": null,
+    "adaptation": "original pixels / crop"
+  },
+  "herbal_medicine": {
+    "source": "Items/Potion/LifePot.png",
+    "pixel_rect": null,
+    "adaptation": "original pixels / crop"
+  },
+  "leather_armor": {
+    "source": "Items/Object/Bag.png",
+    "pixel_rect": null,
+    "adaptation": "original pixels / crop"
+  },
+  "bow": {
+    "source": "Items/Weapons/Bow/Sprite.png",
+    "pixel_rect": null,
+    "adaptation": "original pixels / crop"
+  },
+  "arrow": {
+    "source": "Items/Weapons/Bow/Arrow.png",
+    "pixel_rect": null,
+    "adaptation": "original pixels / crop"
+  },
+  "wood": {
+    "source": "Items/Resource/Branch.png",
+    "pixel_rect": null,
+    "adaptation": "original pixels / crop"
+  },
+  "branch": {
+    "source": "Items/Resource/Branch.png",
+    "pixel_rect": null,
+    "adaptation": "original pixels / crop"
+  },
+  "root": {
+    "source": "Items/Food/SeedBig2.png",
+    "pixel_rect": null,
+    "adaptation": "original pixels / crop"
+  },
+  "raw_fish": {
+    "source": "Items/Food/Fish.png",
+    "pixel_rect": null,
+    "adaptation": "original pixels / crop"
+  },
+  "fish": {
+    "source": "Items/Food/Fish.png",
+    "pixel_rect": null,
+    "adaptation": "original pixels / crop"
+  },
+  "raw_meat": {
+    "source": "Items/Food/Beaf.png",
+    "pixel_rect": null,
+    "adaptation": "original pixels / crop"
+  },
+  "cooked_meat": {
+    "source": "Items/Food/Meat.png",
+    "pixel_rect": null,
+    "adaptation": "original pixels / crop"
+  },
+  "stew": {
+    "source": "Items/Food/Noodle.png",
+    "pixel_rect": null,
+    "adaptation": "original pixels / crop"
+  },
+  "spring": {
+    "source": "Items/Resource/Water.png",
+    "pixel_rect": null,
+    "adaptation": "original pixels / crop"
+  },
+  "explorer_idle": {
+    "source": "Actor/CharacterAnimated/NinjaGreen/Separate/Idle.png",
+    "pixel_rect": null,
+    "adaptation": "original pixels / crop"
+  },
+  "explorer_walk": {
+    "source": "Actor/CharacterAnimated/NinjaGreen/Separate/Walk.png",
+    "pixel_rect": null,
+    "adaptation": "original pixels / crop"
+  },
+  "fire_animation": {
+    "source": "FX/Particle/Fire.png",
+    "pixel_rect": null,
+    "adaptation": "original pixels / crop"
+  },
+  "water_animation": {
+    "source": "Backgrounds/Animated/Water Ripples/SpriteSheet16x16.png",
+    "pixel_rect": null,
+    "adaptation": "original pixels / crop"
+  },
+  "terrain": {
+    "source": [
+      "Backgrounds/Tilesets/TilesetFloor.png",
+      "Backgrounds/Animated/Water Ripples/SpriteSheet16x16.png"
+    ],
+    "ground_cells": [
+      [
+        11,
+        12
+      ],
+      [
+        12,
+        12
+      ],
+      [
+        13,
+        12
+      ],
+      [
+        14,
+        12
+      ],
+      [
+        0,
+        12
+      ],
+      [
+        1,
+        12
+      ],
+      [
+        2,
+        12
+      ],
+      [
+        3,
+        12
+      ]
+    ],
+    "adaptation": "nearest 2x, water frames vertical; source palette preserved"
+  },
+  "game_icon": {
+    "source": [
+      "pine",
+      "fire_animation"
+    ],
+    "adaptation": "composition, nearest 2x"
+  }
+}

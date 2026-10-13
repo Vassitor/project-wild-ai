@@ -1,0 +1,53 @@
+class_name WildErrorMessages
+extends RefCounted
+## 界面错误码翻译，规则层不依赖本地化文案。
+
+const MESSAGES: Dictionary = {
+	&"ROOM_ENDING":"房主正在结束房间，未开始新操作。", &"ROOM_ENDED_PENDING":"连接结束前未收到此操作的结果；原身份重连后核对物资 / 成长。",
+	&"DIFFERENT_FOOD_QUALITY":"熟食加成不同，不能合并；请放到空格，保留各自营养与保质期。",
+	&"SKILL_REQUIRED":"缺少对应技能节点，按 K 查看并解锁。", &"INVALID_SKILL":"技能分支或节点参数无效。",
+	&"SKILL_ALREADY_LEARNED":"该节点已学习，不会重复扣钱或点数。", &"SKILL_PREREQUISITE":"请先学习本分支前一个节点。",
+	&"BASE_LEARNING_ONLY":"货币学习只能在永久基地进行。", &"INSUFFICIENT_SKILL_POINTS":"该分支点数不足，有效实践每 100 经验获得 1 点。",
+	&"MISSING_FISHING_KIT":"需要耐久至少 1 的钓具。", &"INVALID_BAIT":"鱼饵请选择浆果或纤维。", &"INSUFFICIENT_FISH":"鱼点储量不足；双份模式需要至少 2 份。",
+	&"MISSING_COOKING_TABLE":"需要靠近料理台。", &"CLEAN_WATER_REQUIRED":"需要随身水壶中至少 0.25 L 清水。",
+	&"CAMP_MAX_LEVEL":"营地已达 3 级。", &"NOT_TRAP":"这不是陷阱。", &"TRAP_LIMIT":"本局最多 5 个有效陷阱，含正在建造的陷阱。",
+	&"TRAP_EMPTY":"陷阱还没有捕获。", &"TRAP_OCCUPIED":"先收取捕获，再拆除。", &"TRAP_NOT_READY":"陷阱占用、报废、饵已满或不需要维护。",
+	&"BUILDING_RESERVED":"队友正在操作这处设施，请等待或选择其他设施。", &"BOX_NOT_EMPTY":"公共箱须先清空才能拆除。",
+	&"NO_BLEEDING":"当前没有出血，不需要消耗绷带。", &"NO_GASTRO":"当前没有肠胃不适，不需要服药。",
+	&"MEDICINE_COOLDOWN":"草药药剂每 2 游戏小时最多使用一次。", &"NOT_MEDICINE":"需要随身绷带或草药药剂。", &"DEAD_ACTOR":"角色已死亡，无法执行动作。",
+	&"RESOURCE_RESERVED":"队友正在采集这处资源，请选择其他资源。", &"SITE_RESERVED":"队友正在该区域建造，请换一处空地。",
+	&"COOP_SLEEP_PENDING":"合作睡眠投票将在完整合作阶段开放。", &"NOT_CONNECTED":"尚未连接到房主。",
+	&"ROOM_NOT_READY":"需要两名玩家均已连接，才能开始验证任务。", &"HOST_ONLY":"只有房主可以执行这项操作。",
+	&"ROSTER_LOCKED":"本局已开始，只允许原队员重连。", &"IDENTITY_DENIED":"重连凭据不匹配。",
+	&"ROOM_FULL":"双人验证房间已满。", &"WRONG_SESSION":"房间或任务已变化，请重新连接。",
+	&"ACTION_BUSY":"正在执行动作，请等待完成或先取消。", &"NO_ACTION":"当前没有进行中的动作。",
+	&"ACTION_UNAVAILABLE":"这项活动将在后续阶段开放。", &"MISSING_MATERIALS":"随身材料不足。",
+	&"MISSING_TOOL":"缺少可用的小刀或斧头，或工具耐久不足。", &"NOT_ENOUGH_STAMINA":"体力不足，先原地恢复或到营地休息。",
+	&"NOT_EDIBLE":"这件物品不能食用。", &"MISSING_BOTTLE":"需要把金属水壶带在身上。",
+	&"BOTTLE_FULL":"水壶剩余容量不足。", &"NOT_ENOUGH_WATER":"水壶内没有足量饮水。",
+	&"WATER_MISMATCH":"生水和清水不能混装，请先喝完或煮净现有水。", &"INVALID_WATER":"需要装有生水的金属水壶。",
+	&"INVALID_BUILD_SITE":"附近没有合适的空地，换个位置建造。", &"BLOCKS_PATH":"这处建造会封死通路。",
+	&"MISSING_FIRE":"需要靠近篝火。", &"FIRE_NOT_LIT":"篝火还没有点燃。", &"INVALID_FIRE":"火已燃烧，或没有燃料。",
+	&"FUEL_FULL":"加入木材后会超过燃料上限。", &"MISSING_CAMP":"需要靠近临时营地。",
+	&"SLEEP_UNSAFE":"血量或水分危急，或仍在出血；先处理再睡眠。",
+	&"INVALID_SEED": "地图种子须为 0–9223372036854775807 的十进制整数，不含前导零。",
+	&"OUT_OF_REACH": "目标不在可达交互范围内。", &"UNKNOWN_RESOURCE": "该资源不存在。",
+	&"RESOURCE_EMPTY": "该资源已经耗尽。",
+	&"OUT_OF_BOUNDS": "物品超出容器边界。", &"OVERLAP": "位置已占用，或堆叠数量已满。",
+	&"VOLUME_LIMIT": "容器体积已满。", &"WEIGHT_LIMIT": "超过 30 kg 携带上限。",
+	&"INVALID_CATEGORY": "这件物品不适合该装备槽。", &"STALE_VERSION": "库存已经更新，请重新操作。",
+	&"NO_SPACE": "没有足够的连续空间。", &"INSUFFICIENT_CURRENCY": "货币不足。",
+	&"FREE_SUPPLY": "基础补给不能出售。", &"SPOILED_FOOD": "商店不收变质食品。",
+	&"INVALID_QUANTITY": "请选择有效数量。", &"INVALID_REQUEST": "操作参数无效。",
+	&"INVALID_PHASE": "请先完成或取消当前整备。", &"SAVE_FAILED": "无法保存，本次操作尚未提交。",
+	&"GENERATION_FAILED": "投放失败，已恢复出发前的物资。", &"SAME_ITEM": "不能把拆分物资放回同一堆叠。",
+	&"FORBIDDEN_CONTAINER": "你不能操作这个私人容器。", &"UNKNOWN_ITEM": "物品已经移动，请重新选择。",
+	&"REQUEST_ID_CONFLICT": "操作编号冲突，请重新操作。", &"NOT_FOR_SALE": "这件物品不在补给目录中。",
+	&"INVALID_SAVE": "档案无法读取，请检查档案与备份文件。", &"INVALID_CATALOG": "补给目录无法读取。",
+	&"UNKNOWN_CONTAINER": "这个容器当前不可使用。", &"INVALID_ITEM": "物资状态无效，操作没有提交。",
+	&"UNKNOWN_ACTOR": "当前身份不能执行这个操作。", &"UNKNOWN_COMMAND": "这个操作暂不可用。",
+}
+
+
+static func describe(code: StringName) -> String:
+	return MESSAGES.get(code, "操作未能完成：%s" % code)

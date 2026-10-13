@@ -1,0 +1,44 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+client UDP port 63561
+client status 正在连接房主…
+client 3 ms PASS health ENet client
+client peer connected 1
+client status 已进入共享荒野
+client 874 ms PASS health welcome
+client 1370 ms PASS health fixture delivered
+client request foreign-treatment => NOT_MEDICINE
+client 1431 ms PASS foreign treatment and forged actor rejected
+client request self-bandage => OK
+client 1536 ms PASS own bandage despite forged payload actor
+client 5361 ms PASS healed authoritative snapshot
+client request self-bandage => OK
+client 5431 ms PASS completed bandage replay
+client request unauthorized-damage => UNKNOWN_COMMAND
+client 5596 ms PASS network cannot inject damage
+client 5596 ms PASS host illness unchanged
+client request healed => OK
+client 5866 ms PASS gastro stage
+client 6962 ms PASS body detail menu advances authoritative world
+client 6963 ms PASS live ENet body detail feedback
+client request self-medicine => OK
+client 7071 ms PASS remote medicine accepted
+client 12369 ms PASS medicine effect snapshot
+client request medicine-too-soon => MEDICINE_COOLDOWN
+client 12409 ms PASS remote cooldown rejects repeat dose
+client 12409 ms PASS private illness RNG absent from packets
+client request medicine-done => OK
+client 12634 ms PASS offline health stage
+client status 房主已断开；可使用原身份重连
+client status 正在连接房主…
+client 14629 ms PASS health reconnect
+client peer connected 1
+client status 已进入共享荒野
+client 14858 ms PASS health reconnect welcome
+client 14858 ms PASS reconnect retains progressed course and cooldown
+client request rejoined-done => OK
+client 15287 ms PASS health finish stage
+client request ready-end => OK
+client 15350 ms PASS health saved ending notification
+client transport status 2, peers [1], sent 266, received 124
+P4 ENet client: 22 passed, 0 failed

@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/presentation/base_explorer.gd" id="1_explorer"]
+[sub_resource type="RectangleShape2D" id="Shape_feet"]
+size = Vector2(12, 8)
+
+[node name="Explorer" type="CharacterBody2D"]
+process_mode = 0
+script = ExtResource("1_explorer")
+
+[node name="Feet" type="CollisionShape2D" parent="."]
+position = Vector2(0, 5)
+shape = SubResource("Shape_feet")

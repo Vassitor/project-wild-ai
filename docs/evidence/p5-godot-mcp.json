@@ -1,0 +1,18 @@
+{
+  "single": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\n  \"output\": [\n    \"Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\\r\",\n    \"\",\n    \"OpenGL API 3.3.0 - Build 30.0.101.1960 - Compatibility - Using Device: Intel - Intel(R) Iris(R) Xe Graphics\\r\",\n    \"\",\n    \"\\r\",\n    \"\",\n    \"P5 graphical preview: isolated skill tree, upgraded camp, actual trap capture and chef food saved\\r\",\n    \"\"\n  ],\n  \"errors\": []\n}"
+      }
+    ]
+  },
+  "coop": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\n  \"output\": [\n    \"Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\\r\",\n    \"\",\n    \"OpenGL API 3.3.0 - Build 30.0.101.1960 - Compatibility - Using Device: Intel - Intel(R) Iris(R) Xe Graphics\\r\",\n    \"\",\n    \"\\r\",\n    \"\",\n    \"P3.5 graphical preview: lobby, two avatars, private inventory / public box, cooperative actions\\r\",\n    \"\"\n  ],\n  \"errors\": []\n}"
+      }
+    ]
+  }
+}
