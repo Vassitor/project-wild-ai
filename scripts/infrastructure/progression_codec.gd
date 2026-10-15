@@ -1,7 +1,7 @@
 class_name WildProgressionCodec
 extends RefCounted
 ## P5 实体、计时与动作链接校验。旧档缺少本字段时保持空状态，首次模拟再初始化。
-static func restore(raw: Variant, run: WildSurvivalState, world: WildWorldData, config: WildGameConfig) -> bool:
+static func restore(raw: Variant, run: WildSurvivalState, world: WildWorldData, config: WildGameConfig, dynamic: bool = false) -> bool:
 	if raw == null: return true
 	if not raw is Dictionary or raw.get("version",0) != 1 or not raw.get("initialized",null) is bool: return false
 	for field: String in ["prey","fish_refills","fishing_random_states","build_experience_counts"]:
@@ -12,15 +12,16 @@ static func restore(raw: Variant, run: WildSurvivalState, world: WildWorldData, 
 	run.fish_refills = raw["fish_refills"].duplicate()
 	run.fishing_random_states = raw["fishing_random_states"].duplicate()
 	run.build_experience_counts = raw["build_experience_counts"].duplicate(true)
-	if run.progression_initialized and (run.prey.size() != 26 or run.fish_refills.size() != 12): return false
+	if run.progression_initialized and ((not dynamic and run.prey.size() != 26) or run.fish_refills.size() != 12): return false
 	var positions: Dictionary = {}
 	for id: Variant in run.prey:
 		var prey: Variant = run.prey[id]
-		if not id is String or not prey is Dictionary or prey.get("id",null) != id or prey.get("kind","") not in ["rabbit","boar"] or not prey.get("alive",null) is bool: return false
+		if not id is String or not prey is Dictionary or prey.get("id",null) != id or prey.get("kind","") not in (["rabbit","boar","wolf"] if dynamic else ["rabbit","boar"]) or not prey.get("alive",null) is bool: return false
 		for key: String in ["x","y"]:
 			if not WildDataValidation.whole(prey.get(key,null)): return false
 		var cell := Vector2i(prey["x"],prey["y"])
-		if not world.contains(cell) or world.tiles[cell.y*world.size.x+cell.x] != WildWorldData.Terrain.FOREST or positions.has(cell) or cell.distance_to(world.spawn) < 30: return false
+		if not world.contains(cell): return false
+		if not dynamic and (world.tiles[cell.y*world.size.x+cell.x] != WildWorldData.Terrain.FOREST or positions.has(cell) or cell.distance_to(world.spawn) < 30): return false
 		positions[cell] = true
 	for id: Variant in run.fish_refills:
 		if not id is String or not world.resources.has(id) or world.resources[id]["kind"] != "fish" or not WildDataValidation.number(run.fish_refills[id]) or run.fish_refills[id] < run.elapsed_seconds: return false

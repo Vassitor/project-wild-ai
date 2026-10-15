@@ -22,6 +22,8 @@ static func decode(data: Dictionary, config: WildGameConfig) -> WildWorldData:
 	world.tile_pixels = config.terrain_tile_pixels
 	world.generator_version = config.generator_version
 	world.seed_text = data["seed"]
+	if not WildDataValidation.whole(data.get("resource_players",1)) or data.get("resource_players",1) < 1 or data.get("resource_players",1) > 4: return null
+	world.resource_players = int(data.get("resource_players",1))
 	world.tiles = _decode_rows(data.get("tiles", null), world.size)
 	world.initial_tiles = _decode_rows(data.get("initial_tiles", null), world.size)
 	if world.tiles.is_empty() or world.initial_tiles.is_empty() or world.tiles != world.initial_tiles:
@@ -99,7 +101,7 @@ static func _resources_valid(world: WildWorldData, config: WildGameConfig) -> bo
 				return false
 		var cell := Vector2i(int(initial["x"]), int(initial["y"]))
 		if current.has("regrow_at") and (not WildDataValidation.number(current["regrow_at"]) or current["regrow_at"] < 0 or kind not in ["berry","root"] or current["remaining"] != 0): return false
-		var stock: int = 6 if kind == "fish" else 1
+		var stock: int = ceili(6*WildCoopWorldRules.food_multiplier(world.resource_players)) if kind == "fish" else 1
 		if not world.walkable(cell) or cell == world.spawn or occupied.has(cell) or current["x"] != initial["x"] or current["y"] != initial["y"] or initial["remaining"] != stock or initial["version"] != 0 or current["remaining"] < 0 or current["remaining"] > stock or current["version"] < 0:
 			return false
 		if id != "%s:%d:%d" % [kind, cell.x, cell.y] or (kind == "fish" and not world.has_water_neighbor(cell)):
@@ -115,7 +117,7 @@ static func _resources_valid(world: WildWorldData, config: WildGameConfig) -> bo
 			branches += 1
 		if distance <= config.spawn_water_path_tiles and kind == "spring":
 			water += 1
-	if counts != WildWorldData.RESOURCE_COUNTS or food < 3 or berries < 1 or roots < 1 or branches < 4 or water < 1:
+	if counts != WildCoopWorldRules.counts(world.resource_players) or food < 3 or berries < 1 or roots < 1 or branches < 4 or water < 1:
 		return false
 	var terrain_counts: Array[int] = [0, 0, 0]
 	for terrain: int in world.tiles:

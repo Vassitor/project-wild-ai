@@ -10,7 +10,7 @@ const BRANCHES: Array[String] = ["gathering","logging","fire","fishing","hunting
 @export var descriptions: Dictionary = {
 	"gathering":["植物辨识提示","植物产出 +1","采集耗时 −25%"],"logging":["伐木耗时 −15%","木材产出 +1","工具磨损 −25%"],
 	"fire":["钻木成功率 +20 百分点","燃料时长 +25%","取火耗时 −50%"],"fishing":["捕鱼成功率 +10 百分点","双份捕鱼：耗饵 2、独立判定","捕鱼耗时 −25%"],
-	"hunting":["简弓 / 箭制作（攻击使用待 P6）","猎物 / 栖息地提示（动态足迹待 P6）","狩猎掉肉 +1（P6）"],"trap":["小型套索","大型陷阱","捕获率 +15 百分点"],
+	"hunting":["简弓 / 箭制作与使用","动物足迹与栖息信息","狩猎掉肉 +1"],"trap":["小型套索","大型陷阱","捕获率 +15 百分点"],
 	"building":["营地升级至 2","料理台 / 皮甲制作","营地升级至 3"],"cooking":["炖食","熟食营养 ×1.15","熟食保质期 ×1.5"],"healing":["草药药剂制作","治疗额外缩短 2 小时","疗养回血 ×1.25"]}
 @export var logging_duration_multiplier: float = 0.85
 @export var gathering_duration_multiplier: float = 0.75

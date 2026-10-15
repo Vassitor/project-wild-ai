@@ -1,0 +1,28 @@
+{
+	"adapter": "Intel(R) Iris(R) Xe Graphics",
+	"four": {
+		"animals": 67,
+		"average_fps": 47.2241644467006,
+		"buildings": 64,
+		"frames": 567,
+		"max_ms": 194.534,
+		"p95_ms": 39.452,
+		"seconds": 12.006565
+	},
+	"four_load_ms": 539.451,
+	"physical_window": [
+		1920,
+		1080
+	],
+	"scope": "1920x1080 physical window, default half-resolution world SubViewport, 64 building fixtures, normal populations, actual synchronous durable saves; four-person authority plus host UI without three remote client processes.",
+	"single": {
+		"animals": 29,
+		"average_fps": 59.1048823629699,
+		"buildings": 64,
+		"frames": 710,
+		"max_ms": 133.878,
+		"p95_ms": 20.141,
+		"seconds": 12.012544
+	},
+	"single_load_ms": 193.993
+}

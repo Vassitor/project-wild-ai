@@ -1,0 +1,59 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+p0 PASS isolated personal kit saved
+p0 PASS personal base opens
+p0 PASS full four player world created
+p0 房间已创建，等待队员
+p0 PASS loopback ENet host
+p0 PASS host personal escrow offered
+p0 telemetry 6802 phase lobby queue 0 pending []
+p0 PASS three separate clients offered / ready
+p0 request room.ready => OK
+p0 PASS host ready
+p0 PASS received authoritative scaled map / hash
+p0 request room.start => OK
+p0 PASS four member departure
+p0 PASS all four map ACK barrier
+p0 PASS four person resource / animal scaling
+p0 PASS four person frame fits initial budget
+p0 PASS all clients see private full snapshots
+p0 PASS practice position fixture saved
+p0 PASS remote effective practice starts
+p0 PASS practice growth and outbox committed together
+p0 PASS personal permanent growth saved before departure end
+p0 request survival.start => OK
+p0 PASS host submits actual construction storage_box
+p0 PASS public storage constructed
+p0 PASS one shared item fixture saved
+p0 telemetry 17472 phase running queue 6 pending []
+p0 PASS three clients race same public item
+p0 PASS one item across four member shared transaction
+p0 PASS explicit recipient accepts actual gift
+p0 PASS gift conservation / private ownership
+p0 request survival.start => OK
+p0 PASS host submits actual construction camp
+p0 PASS actual camp built for unanimous sleep
+p0 PASS all four near camp fixture saved
+p0 request sleep.vote => OK
+p0 PASS host proposes cooperative sleep
+p0 PASS all four network votes start shared sleep
+p0 PASS authority damage wakes all four
+p0 PASS all clients observe shared sleep interruption
+p0 p3 断线，角色留在原地
+p0 PASS original member disconnects
+p0 PASS offline body can die
+p0 PASS offline death makes corpse
+p0 PASS dead original member reconnects
+p0 PASS dead client confirms no revival / action
+p0 PASS teammate withdraws corpse rations
+p0 PASS corpse transfer cannot duplicate dead inventory
+p0 PASS shared terminal world / outboxes committed
+p0 telemetry 27683 phase settled queue 6 pending []
+p0 p3 断线，角色留在原地
+p0 PASS all three personal stores apply terminal delivery
+p0 PASS host personal settlement applied
+p0 PASS terminal world restores without extra rewards
+p0 PASS host normal save / end
+p0 p2 断线，角色留在原地
+p0 p1 断线，角色留在原地
+P6.5 p0 network checks: 43 passed, 0 failed

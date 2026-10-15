@@ -10,6 +10,8 @@ var world_view: WildWildernessWorld
 var survival_panel: WildSurvivalPanel
 var body_details: WildBodyDetails
 var skill_panel: WildSkillPanel
+var _top_panel: PanelContainer
+var _bottom_panel: PanelContainer
 var _lobby: PanelContainer
 var _inventory: PanelContainer
 var _inventory_columns: HBoxContainer
@@ -36,6 +38,10 @@ var _loaded_run: String = ""
 var _exiting: bool = false
 var _handling_end: bool = false
 var _credentials_recovered: bool = false
+var field_guide: WildFieldGuide
+
+func full_mode() -> bool:
+	return false
 
 func _ready() -> void:
 	WildInputBindings.install_defaults()
@@ -54,22 +60,31 @@ func _ready() -> void:
 	session = WildCoopReplicaSession.new()
 	_create_world()
 	_create_ui()
+	WildUiLayout.modal_backdrop(self, [_inventory, survival_panel, body_details, skill_panel])
+	resized.connect(_layout_ui)
+	_layout_ui()
+	_layout_ui.call_deferred()
 	get_tree().auto_accept_quit = false
 
 func _install_theme() -> void:
-	var visual := Theme.new()
-	var font := SystemFont.new()
-	font.font_names = PackedStringArray(["Microsoft YaHei","SimHei"])
-	visual.default_font = font
-	visual.default_font_size = 17
-	var style := StyleBoxFlat.new()
-	style.bg_color = Color("12281e")
-	style.border_color = Color("73855e")
-	style.set_border_width_all(1)
-	style.set_content_margin_all(16)
-	visual.set_stylebox("panel","PanelContainer",style)
-	visual.set_color("font_color","Label",Color("e9dfbd"))
-	theme = visual
+	theme = WildUiTheme.create()
+
+## 合作界面使用相同逻辑视口布局；遮罩不修改合作会话的持续模拟策略。
+func _layout_ui() -> void:
+	if _top_panel == null or skill_panel == null: return
+	var area: Vector2 = size
+	_top_panel.position = Vector2(20,16)
+	_top_panel.size = Vector2(area.x-40,86)
+	var toolbar_height: float = 148 if area.x < 1160 else 128
+	_bottom_panel.position = Vector2(20,area.y-toolbar_height-16)
+	_bottom_panel.size = Vector2(area.x-40,toolbar_height)
+	_lobby.size = Vector2(minf(780,area.x-40),maxf(260,area.y-280))
+	_lobby.position = Vector2((area.x-_lobby.size.x)/2,114)
+	WildUiLayout.center(_inventory,area,Vector2(1120,560))
+	WildUiLayout.center(survival_panel,area,Vector2(760,580))
+	WildUiLayout.center(body_details,area,Vector2(840,570))
+	WildUiLayout.center(skill_panel,area,Vector2(1120,600))
+	if field_guide != null: WildUiLayout.center(field_guide,area,Vector2(860,600))
 
 func _create_world() -> void:
 	var container := SubViewportContainer.new()
@@ -87,18 +102,23 @@ func _create_world() -> void:
 	world_view.visible = false
 	world_view.process_mode = Node.PROCESS_MODE_DISABLED
 	world_view.inspect_requested.connect(_open_actions)
+	world_view.combat_message.connect(func(message: String) -> void: _status.text = message)
 	viewport.add_child(world_view)
 
 func _panel(bounds: Rect2) -> PanelContainer:
 	var panel := PanelContainer.new()
 	panel.position = bounds.position
 	panel.size = bounds.size
+	panel.theme_type_variation = &"HudPanel"
 	add_child(panel)
 	return panel
 
 func _label(parent: Node, value: String) -> Label:
 	var label := Label.new()
 	label.text = value
+	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	label.add_theme_font_size_override("font_size",15)
 	parent.add_child(label)
 	return label
 
@@ -112,30 +132,46 @@ func _button(parent: Node, title: String, callback: Callable) -> Button:
 	return button
 
 func _create_ui() -> void:
-	var top := _panel(Rect2(20,16,1240,96))
-	_hud = _label(top,"双人合作验证 · P3.5\n私人背包 / 公共营地 · 个人菜单不暂停")
-	var bottom := _panel(Rect2(20,602,1240,100))
+	var top := _panel(Rect2(20,16,1240,86))
+	_top_panel = top
+	_hud = _label(top,"2–4 人合作 · 个人行装 / 共享营地" if full_mode() else "双人合作 · 验证版\n私人背包 / 公共营地 · 个人菜单不暂停")
+	_hud.add_theme_font_size_override("font_size",14)
+	var bottom := _panel(Rect2(20,576,1240,128))
+	_bottom_panel = bottom
 	var column := VBoxContainer.new()
 	bottom.add_child(column)
-	_status = _label(column,"新建或连接房间。本入口使用独立验证物资，不消耗永久基地物资。")
-	var row := HBoxContainer.new()
+	_status = _label(column,"在个人基地整理行装，再建房或加入；提交后物资由房主世界托管。" if full_mode() else "新建或连接房间。本入口使用独立验证物资，不消耗永久基地物资。")
+	var row := HFlowContainer.new()
 	row.add_theme_constant_override("separation",12)
 	column.add_child(row)
-	_start = _button(row,"房主：两人出发",_start_run)
+	_start = _button(row,"房主：全员出发" if full_mode() else "房主：两人出发",_start_run)
 	_start.disabled = true
 	_button(row,"Tab 行装 / 公共箱",_open_inventory)
 	_button(row,"C / B 料理与营地",_open_actions)
 	_button(row,"H 身体",_open_body_details)
 	_button(row,"K 技能",_open_skills)
+	_button(row,"F1 手册 / 摘要",_open_guide)
 	_button(row,"取消动作",_cancel_action)
 	_button(row,"断开 / 保存结束",_leave)
 	_button(row,"返回单机",_back_to_base)
-	_lobby = _panel(Rect2(310,145,660,430))
+	field_guide = WildFieldGuide.new()
+	add_child(field_guide)
+	field_guide.close_requested.connect(_close_menus)
+	field_guide.audio = WildUiFeedback.new()
+	add_child(field_guide.audio)
+	# 完整合作在身份确定后绑定同一份本地音效偏好；独立入口亦使用自己的身份路径。
+	WildUiLayout.modal_backdrop(self,[field_guide])
+	_lobby = _panel(Rect2(250,114,780,440))
+	_lobby.theme_type_variation = &""
 	var lobby_column := VBoxContainer.new()
 	lobby_column.add_theme_constant_override("separation",12)
-	_lobby.add_child(lobby_column)
-	_label(lobby_column,"合作验证：房主承载世界 · ENet / UDP")
-	_label(lobby_column,"两人连接后由房主出发，途中只允许原成员重连。\n死亡观战、睡眠投票和逐人奖励将在 P6.5 完成。")
+	var lobby_scroll := ScrollContainer.new()
+	lobby_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	_lobby.add_child(lobby_scroll)
+	lobby_column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	lobby_scroll.add_child(lobby_column)
+	_label(lobby_column,"2–4 人合作 · 房主承载世界 · ENet / UDP" if full_mode() else "合作验证：房主承载世界 · ENet / UDP")
+	_label(lobby_column,"全员提交个人行装并准备后出发；途中仅原成员可重连。\n死亡观战、尸体可取；全体在线存活者同意后睡眠跳时。" if full_mode() else "两人连接后由房主出发，途中只允许原成员重连。\n死亡观战、睡眠投票和逐人奖励将在 P6.5 完成。")
 	_name_input = LineEdit.new()
 	_name_input.text = "生存者"
 	_name_input.placeholder_text = "昵称（最多 32 字）"
@@ -156,25 +192,32 @@ func _create_ui() -> void:
 	_seed = LineEdit.new()
 	_seed.placeholder_text = "地图种子，留空随机"
 	lobby_column.add_child(_seed)
-	var actions := HBoxContainer.new()
+	var actions := HFlowContainer.new()
 	lobby_column.add_child(actions)
-	_button(actions,"新建验证房间",_host.bind(false))
+	_button(actions,"新建合作房间" if full_mode() else "新建验证房间",_host.bind(false))
 	_button(actions,"恢复房主存档",_host.bind(true))
 	_button(actions,"连接 / 原身份重连",_join)
-	_label(lobby_column,"验证包：小刀、打火石、水壶、16 木材、10 纤维、3 石材、3 干粮。\n新建另有钓具、2 绷带 / 2 草药药剂；旧档恢复不补发。\n出发前按 K 可用 600 验证资金学习技能。\n新建会覆盖独立验证房间；恢复沿用旧世界与成员。\n同机两窗口默认分别使用房主 / 队员验证身份。")
-	_inventory = _panel(Rect2(110,145,1060,425))
+	_label(lobby_column,"使用个人基地的仓库、货币和永久技能；空间 / 体积 / 负重限制沿用单机。\n断线行装不自动返还；恢复原房间后同步。房主档案按房间保留。\n好友合作信任本地档案；不同玩法或内容版本拒绝连接。" if full_mode() else "验证包：小刀、打火石、水壶、16 木材、10 纤维、3 石材、3 干粮。\n新建另有钓具、2 绷带 / 2 草药药剂；旧档恢复不补发。\n出发前按 K 可用 600 验证资金学习技能。\n新建会覆盖独立验证房间；恢复沿用旧世界与成员。\n同机两窗口默认分别使用房主 / 队员验证身份。")
+	_inventory = _panel(Rect2(80,80,1120,560))
+	_inventory.theme_type_variation = &""
 	_inventory.visible = false
 	var inventory_column := VBoxContainer.new()
 	_inventory.add_child(inventory_column)
-	_label(inventory_column,"私人行装与附近公共箱 · 拖放 / R 旋转 · 世界持续推进")
+	var inventory_title: Label = _label(inventory_column,"行装与公共箱")
+	inventory_title.autowrap_mode = TextServer.AUTOWRAP_OFF
+	inventory_title.add_theme_font_size_override("font_size",26)
+	inventory_title.add_theme_color_override("font_color",WildUiTheme.GOLD)
+	_label(inventory_column,"私人背包与附近公共箱 · 拖放整理 / R 旋转 · 世界持续推进").autowrap_mode = TextServer.AUTOWRAP_OFF
 	var scroll := ScrollContainer.new()
+	scroll.custom_minimum_size.y = 140
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	inventory_column.add_child(scroll)
 	_inventory_columns = HBoxContainer.new()
 	_inventory_columns.add_theme_constant_override("separation",24)
 	scroll.add_child(_inventory_columns)
 	_selection = _label(inventory_column,"选中食物后进食，选中水壶后饮水。")
-	var tools_row := HBoxContainer.new()
+	_selection.autowrap_mode = TextServer.AUTOWRAP_OFF
+	var tools_row := HFlowContainer.new()
 	inventory_column.add_child(tools_row)
 	_button(tools_row,"进食选中物品",_use_selected.bind("eat"))
 	_button(tools_row,"饮水 0.5 L",_use_selected.bind("drink"))
@@ -210,6 +253,7 @@ func _select_identity(role: String) -> bool:
 		_set_status("无法读取验证身份："+str(identity.code))
 		return false
 	var actor: String = identity.payload["player_id"]
+	if field_guide.audio._owner == null: field_guide.audio.configure(self,_identity_path)
 	if _name_input.text.strip_edges().is_empty(): _name_input.text = "生存者"
 	_credentials = WildBaseStateStore.new(_identity_path.get_basename()+"_credentials.json")
 	var loaded: WildOperationResult = _credentials.load_records()
@@ -310,8 +354,13 @@ func _process(delta: float) -> void:
 	var data: Dictionary = network.latest
 	var body: Dictionary = data["players"][network.actor_id]["body"]
 	var roster: PackedStringArray = []
-	for player: Dictionary in data["players"].values(): roster.append("%s · %s · 血量 %.0f" % [player["name"],"在线" if player["online"] else "离线留存",player["body"]["health_points"]])
-	_hud.text = "双人合作验证  %s  ·  累计 %.2f 小时  ·  %s\n血量 %.0f  水分 %.0f  体力 %.0f  行装 %.1f kg   |   %s\nWASD / Shift 移动   E 互动   Tab 行装   C / B 营地   H 身体   K 技能   Esc 关闭菜单（合作不暂停）" % ["进行中" if data["started"] else "等待出发",(data["elapsed_seconds"]+data["pending_seconds"])/3600,data["outcome"],body["health_points"],body["hydration"],body["stamina"],data["carried_weight_kg"]," / ".join(roster)]
+	for player: Dictionary in data["players"].values():
+		var display_name: String = str(player["name"])
+		if display_name.length() > 12: display_name = display_name.left(12)+"…"
+		roster.append("%s · %s · 血量 %.0f" % [display_name,"在线" if player["online"] else "离线留存",player["body"]["health_points"]])
+	var outcome_text: String = {"running":"生存中","won":"已完成","lost":"已结束"}.get(data["outcome"],"已结束")
+	_hud.text = "双人合作 · %s · 累计 %.2f 小时 · %s\n血量 %.0f  水分 %.0f  体力 %.0f  行装 %.1f kg · 个人菜单不暂停\n%s" % ["进行中" if data["started"] else "等待出发",(data["elapsed_seconds"]+data["pending_seconds"])/3600,outcome_text,body["health_points"],body["hydration"],body["stamina"],data["carried_weight_kg"]," / ".join(roster)]
+	_hud.tooltip_text = "WASD / Shift 移动 · E 互动 · Esc 关闭菜单\n"+" / ".join(data["players"].values().map(func(player: Dictionary) -> String: return str(player["name"])))
 	world_view.show_time(data["elapsed_seconds"])
 	if data["save_blocked"]: _set_status("房主保存失败，模拟冻结，正在重试。")
 	if data["outcome"] != "running": _set_status("验证任务已结束，房间已保存；合作奖励 / 尸体 / 观战将在 P6.5 接入。")
@@ -330,6 +379,7 @@ func _on_result(_request: String, result: WildOperationResult) -> void:
 
 func _open_actions(target: Dictionary = {}) -> void:
 	if network.latest.is_empty(): return
+	field_guide.visible = false
 	skill_panel.visible = false
 	body_details.visible = false
 	if target.get("kind","") == "storage_box":
@@ -340,6 +390,7 @@ func _open_actions(target: Dictionary = {}) -> void:
 	survival_panel.open(target)
 
 func _close_menus() -> void:
+	field_guide.visible = false
 	skill_panel.visible = false
 	body_details.visible = false
 	_inventory.visible = false
@@ -348,6 +399,7 @@ func _close_menus() -> void:
 
 func _open_inventory() -> void:
 	if network.latest.is_empty(): return
+	field_guide.visible = false
 	skill_panel.visible = false
 	body_details.visible = false
 	if _inventory.visible:
@@ -357,6 +409,7 @@ func _open_inventory() -> void:
 	session.submit(WildGameCommand.new(network.actor_id,&"base.open_pause"))
 	_inventory.visible = true
 	_refresh_inventory()
+	_layout_ui.call_deferred()
 
 func _refresh_inventory() -> void:
 	if not _inventory.visible: return
@@ -370,8 +423,13 @@ func _refresh_inventory() -> void:
 		_grid_signature = signature
 		for id: String in containers:
 			var column := VBoxContainer.new()
-			_inventory_columns.add_child(column)
-			_label(column,{"backpack":"背包","main_hand":"主手","off_hand":"副手","armor":"护甲"}.get(id,"公共营地箱"))
+			var card := PanelContainer.new()
+			card.theme_type_variation = &"CardPanel"
+			_inventory_columns.add_child(card)
+			card.add_child(column)
+			# 物品格宽度决定栏目宽度；短标题不换行，避免单格装备的标题被压成竖排。
+			var title: Label = _label(column,{"backpack":"私人背包","main_hand":"主手","off_hand":"副手","armor":"护甲"}.get(id,"队友尸体" if id.begins_with("corpse:") else "公共营地箱"))
+			title.autowrap_mode = TextServer.AUTOWRAP_OFF
 			var grid := WildInventoryGrid.new()
 			grid.configure(containers[id],CATALOG,_preview,32)
 			grid.transfer_requested.connect(_transfer)
@@ -410,7 +468,11 @@ func _split_selected() -> void:
 	_grids[_selected_container].begin_partial_drag(_selected_item,floori(float(entry["item"]["quantity"])/2))
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed(&"inventory"): _open_inventory()
+	if event.is_action_pressed(&"field_guide"):
+		if field_guide.visible: _close_menus()
+		else: _open_guide()
+	elif event.is_action_pressed(&"attack") and session != null and session.active_station().is_empty() and world_view.visible: world_view.request_attack()
+	elif event.is_action_pressed(&"inventory"): _open_inventory()
 	elif event.is_action_pressed(&"pause"): _close_menus()
 	elif event.is_action_pressed(&"interact") and session.active_station().is_empty(): world_view.request_interaction()
 	elif event.is_action_pressed(&"craft") or event.is_action_pressed(&"build"): _open_actions()
@@ -423,6 +485,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _open_body_details() -> void:
 	if network.latest.is_empty(): return
+	field_guide.visible = false
 	skill_panel.visible = false
 	_inventory.visible = false
 	survival_panel.visible = false
@@ -431,11 +494,21 @@ func _open_body_details() -> void:
 
 func _open_skills() -> void:
 	if network.latest.is_empty(): return
+	field_guide.visible = false
 	_inventory.visible = false
 	survival_panel.visible = false
 	body_details.visible = false
 	session.submit(WildGameCommand.new(network.actor_id,&"base.open_pause"))
 	skill_panel.open(network.actor_id)
+
+func _guide_snapshot() -> Dictionary:
+	return network.latest
+
+func _open_guide() -> void:
+	_close_menus()
+	session.submit(WildGameCommand.new(network.actor_id,&"base.open_pause"))
+	field_guide.open(_guide_snapshot(),CONFIG,CATALOG,CONTENT,true)
+	field_guide.move_to_front()
 
 func _on_ended() -> void:
 	if _handling_end: return

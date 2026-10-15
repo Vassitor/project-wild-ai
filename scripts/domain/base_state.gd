@@ -13,6 +13,11 @@ var survival: WildSurvivalState
 var pending: Array[Dictionary] = []
 var last_settlement: Dictionary = {}
 var skills: WildSkillProfile = WildSkillProfile.new()
+## 跨端租约与收据。托管物资只由世界持有，基地中的租约副本不可使用。
+var cooperation: Dictionary = {"version":1,"active":{},"history":{}}
+## 仅事务内的材料依赖；不会存入私人库存或共享 Resource。
+var material_sources: Dictionary[String, WildInventoryContainer] = {}
+var material_reserved: Dictionary = {}
 
 
 func _init(owner: String, config: WildGameConfig) -> void:
@@ -41,6 +46,11 @@ func carried_weight(catalog: WildItemCatalog, config: WildGameConfig, actor: Str
 
 
 func record() -> Dictionary:
+	var raw: Dictionary = _record()
+	raw["cooperation"] = cooperation.duplicate(true)
+	return raw
+
+func _record() -> Dictionary:
 	var inventory: Dictionary = {}
 	for id: String in containers:
 		inventory[id] = containers[id].record()
@@ -55,6 +65,7 @@ func copy(config: WildGameConfig) -> WildBaseState:
 	var duplicate := WildBaseState.new(player_id, config)
 	duplicate.currency = currency
 	duplicate.skills = skills.copy()
+	duplicate.cooperation = cooperation.duplicate(true)
 	duplicate.phase = phase
 	duplicate.active_run = active_run.duplicate(true)
 	duplicate.receipts = receipts.duplicate(true)

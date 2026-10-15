@@ -40,7 +40,8 @@ static func tick(state: WildBaseState, actor_states: Dictionary, content: WildSu
 		while run.fish_refills[id] <= run.elapsed_seconds+0.000001:
 			var resource: Dictionary = state.world.resources[id]
 			var old: int = int(resource["remaining"])
-			resource["remaining"] = mini(6,old+content.fish_refill_quantity)
+			var multiplier: float = WildCoopWorldRules.food_multiplier(state.world.resource_players)
+			resource["remaining"] = mini(ceili(6*multiplier),old+ceili(content.fish_refill_quantity*multiplier))
 			if resource["remaining"] != old:
 				resource["version"] += 1
 				changed = true

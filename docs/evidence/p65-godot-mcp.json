@@ -1,0 +1,16 @@
+{
+  "output": [
+    "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\r",
+    "",
+    "OpenGL API 3.3.0 - Build 30.0.101.1960 - Compatibility - Using Device: Intel - Intel(R) Iris(R) Xe Graphics\r",
+    "",
+    "\r",
+    "",
+    "P6.5 graphical preview: isolated personal preparation / four members / corpses / spectating display fixtures\r",
+    ""
+  ],
+  "errors": [],
+  "scene": "res://tests/p65_preview.tscn",
+  "network_protocol": 3,
+  "date": "2026-10-15"
+}

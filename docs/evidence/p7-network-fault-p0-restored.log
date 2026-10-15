@@ -1,0 +1,45 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+p0 PASS personal base opens
+p0 PASS process restart restores exact durable world
+p0 房间已创建，等待队员
+p0 PASS loopback ENet host
+p0 PASS all original members reconnect after host process restart
+p0 PASS restart creates no fifth character
+p0 PASS clients confirm no second loadout import
+p0 request survival.start => OK
+p0 PASS host submits actual construction storage_box
+p0 PASS public storage constructed
+p0 PASS one shared item fixture saved
+p0 telemetry 7250 phase running queue 12 pending []
+p0 PASS three clients race same public item
+p0 PASS one item across four member shared transaction
+p0 PASS explicit recipient accepts actual gift
+p0 PASS gift conservation / private ownership
+p0 request survival.start => OK
+p0 PASS host submits actual construction camp
+p0 PASS actual camp built for unanimous sleep
+p0 PASS all four near camp fixture saved
+p0 request sleep.vote => OK
+p0 PASS host proposes cooperative sleep
+p0 PASS all four network votes start shared sleep
+p0 PASS authority damage wakes all four
+p0 PASS all clients observe shared sleep interruption
+p0 p3 断线，角色留在原地
+p0 PASS original member disconnects
+p0 PASS offline body can die
+p0 PASS offline death makes corpse
+p0 PASS dead original member reconnects
+p0 PASS dead client confirms no revival / action
+p0 telemetry 17337 phase running queue 9 pending []
+p0 PASS teammate withdraws corpse rations
+p0 PASS corpse transfer cannot duplicate dead inventory
+p0 PASS shared terminal world / outboxes committed
+p0 p3 断线，角色留在原地
+p0 PASS all three personal stores apply terminal delivery
+p0 PASS host personal settlement applied
+p0 PASS terminal world restores without extra rewards
+p0 PASS host normal save / end
+p0 p1 断线，角色留在原地
+p0 p2 断线，角色留在原地
+P6.5 p0 network checks: 32 passed, 0 failed

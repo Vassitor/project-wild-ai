@@ -21,7 +21,10 @@ var _split_dialog: ConfirmationDialog
 var _split_quantity: SpinBox
 var _split_grid: WildInventoryGrid
 var _split_id: String
+var _refresh_queued: bool = false
+var _seed_text: String = ""
 var _notice: String = "拖动整理；R 旋转；Shift + 点击拆分堆叠。"
+var cooperation_preparation: bool = false
 signal survival_action_started
 
 
@@ -31,12 +34,9 @@ func configure(session: WildLocalSession, actor: String, catalog: WildItemCatalo
 	_catalog = catalog
 	_config = config
 	_session.base_state_changed.connect(_schedule_refresh)
-	var style := StyleBoxFlat.new()
-	style.bg_color = Color("102219")
-	style.border_color = Color("6b7956")
-	style.set_border_width_all(1)
-	style.set_content_margin_all(16)
-	add_theme_stylebox_override("panel", style)
+	add_theme_stylebox_override("panel", WildUiTheme.panel())
+	resized.connect(func() -> void:
+		if visible: _schedule_refresh())
 	_body = VBoxContainer.new()
 	_body.add_theme_constant_override("separation", 8)
 	add_child(_body)
@@ -62,12 +62,19 @@ func open(station_id: StringName) -> void:
 
 
 func _schedule_refresh() -> void:
-	refresh.call_deferred()
+	if _refresh_queued: return
+	_refresh_queued = true
+	_flush_refresh.call_deferred()
+
+func _flush_refresh() -> void:
+	_refresh_queued = false
+	refresh()
 
 
 func refresh() -> void:
 	if _body == null:
 		return
+	if is_instance_valid(_seed_input): _seed_text = _seed_input.text
 	_view = _session.base_snapshot(_actor)
 	for child: Node in _body.get_children():
 		_body.remove_child(child)
@@ -79,13 +86,18 @@ func refresh() -> void:
 	header.add_child(title)
 	_button(header, "关闭  Esc", func() -> void: close_requested.emit())
 	_body.add_child(_text("货币 %d    携带 %.2f / %.0f kg    背包 %.2f / %.0f L    移动效率 %.0f%%" % [_view["currency"], _view["carried_weight_kg"], _config.hard_weight_limit_kg, _view["containers"]["backpack"]["volume_l"], _config.backpack_capacity_l, _view["movement_multiplier"] * 100.0], 16))
+	var scroll := ScrollContainer.new()
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	_body.add_child(scroll)
 	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 24)
-	row.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	_body.add_child(row)
+	row.add_theme_constant_override("separation", 16)
+	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.add_child(row)
+	var compact: bool = size.x < 1050
 	if _view["phase"] != WildRunFlow.Phase.WILDERNESS:
-		_add_grid_column(row, "warehouse", "永久仓库  12×10", 32)
-	var bag_column: VBoxContainer = _add_grid_column(row, "backpack", "标准背包  8×6", 40)
+		_add_grid_column(row, "warehouse", "永久仓库 · 12×10", 24 if compact else 28)
+	var bag_column: VBoxContainer = _add_grid_column(row, "backpack", "随身背包 · 8×6", 32 if compact else 36)
 	var equipment := HBoxContainer.new()
 	equipment.add_theme_constant_override("separation", 16)
 	bag_column.add_child(equipment)
@@ -94,10 +106,13 @@ func refresh() -> void:
 		equipment.add_child(slot_column)
 		slot_column.add_child(_text({"main_hand": "主手", "off_hand": "副手", "armor": "护甲"}[slot], 14))
 		_add_grid(slot_column, slot, 56)
+	var details_card := PanelContainer.new()
+	details_card.theme_type_variation = &"CardPanel"
+	details_card.custom_minimum_size.x = 250 if compact else 280
+	details_card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(details_card)
 	var details := VBoxContainer.new()
-	details.custom_minimum_size.x = 300
-	details.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	row.add_child(details)
+	details_card.add_child(details)
 	if _station == &"supply":
 		_build_shop(details)
 	_selection_view = VBoxContainer.new()
@@ -107,14 +122,23 @@ func refresh() -> void:
 	_status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_status.custom_minimum_size.y = 30
 	_body.add_child(_status)
-	var footer := HBoxContainer.new()
+	if _station == &"expedition" or cooperation_preparation:
+		var briefing := _text(WildExpeditionText.checklist(_view,_config,preload("res://data/survival_content.tres")),14)
+		briefing.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		_body.add_child(briefing)
+	var footer := HFlowContainer.new()
 	footer.add_theme_constant_override("separation", 14)
 	_body.add_child(footer)
 	if _view["phase"] == WildRunFlow.Phase.BASE:
 		_button(footer, "领取缺少的基础补给", _send.bind(&"supply.claim", {}))
+		if cooperation_preparation:
+			if _view.get("pending_count",0) > 0: _button(_selection_view,"领取返航物资（%d 组）" % _view["pending_count"],_send.bind(&"pending.claim",{}))
+			footer.add_child(_text("整理完毕后关闭面板，在大厅提交行装与准备。",14))
+			return
 		_button(footer, "开始出发整备", func() -> void: _send(&"expedition.prepare", {"seed": _seed_input.text.strip_edges()}))
 		footer.add_child(_text("地图种子", 14))
 		_seed_input = LineEdit.new()
+		_seed_input.text = _seed_text
 		_seed_input.placeholder_text = "留空随机 · 可输入整数复现"
 		_seed_input.custom_minimum_size.x = 280
 		_seed_input.max_length = 19
@@ -134,7 +158,10 @@ func refresh() -> void:
 func _add_grid_column(parent: Control, id: String, title: String, pixels: int) -> VBoxContainer:
 	var column := VBoxContainer.new()
 	column.add_theme_constant_override("separation", 6)
-	parent.add_child(column)
+	var card := PanelContainer.new()
+	card.theme_type_variation = &"CardPanel"
+	parent.add_child(card)
+	card.add_child(column)
 	column.add_child(_text(title, 18))
 	_add_grid(column, id, pixels)
 	var container: Dictionary = _view["containers"][id]
@@ -154,11 +181,13 @@ func _add_grid(parent: Control, id: String, pixels: int) -> void:
 func _build_shop(parent: Control) -> void:
 	parent.add_child(_text("补给目录", 18))
 	var list := ItemList.new()
-	list.custom_minimum_size = Vector2(280, 150)
+	list.custom_minimum_size = Vector2(220, 156)
+	list.fixed_icon_size = Vector2i(24,24)
+	list.icon_mode = ItemList.ICON_MODE_LEFT
 	parent.add_child(list)
 	for definition: WildItemDefinition in _catalog.definitions:
 		if definition.purchasable:
-			var index: int = list.add_item("%s   ·   %d" % [definition.display_name, definition.price])
+			var index: int = list.add_item("%s   ·   %d" % [definition.display_name, definition.price], WildArtLibrary.texture(definition.item_id))
 			list.set_item_metadata(index, str(definition.item_id))
 			if definition.item_id == _selected_definition:
 				list.select(index)
@@ -167,7 +196,7 @@ func _build_shop(parent: Control) -> void:
 		refresh.call_deferred()
 	)
 	var selected: WildItemDefinition = _catalog.find(_selected_definition)
-	parent.add_child(_text("%s  %d×%d  %.2f kg / %.2f L" % [selected.display_name, selected.grid_size.x, selected.grid_size.y, selected.unit_weight_kg, selected.unit_volume_l], 14))
+	parent.add_child(_wrapped_text("%s  %d×%d  %.2f kg / %.2f L" % [selected.display_name, selected.grid_size.x, selected.grid_size.y, selected.unit_weight_kg, selected.unit_volume_l], 14))
 	var purchase := HBoxContainer.new()
 	parent.add_child(purchase)
 	_quantity = SpinBox.new()
@@ -184,13 +213,13 @@ func _build_shop(parent: Control) -> void:
 func _build_selection(parent: Control) -> void:
 	var entry: Dictionary = _selected_entry()
 	if entry.is_empty():
-		parent.add_child(_text("点击物资查看详情。\n拖动到另一网格可转移，\n拖到同类物资可合并。", 16))
+		parent.add_child(_wrapped_text("点击物资查看详情。\n拖动到另一网格可转移，\n拖到同类物资可合并。", 16))
 		return
 	var item: Dictionary = entry["item"]
 	var definition: WildItemDefinition = _catalog.find(StringName(item["item_id"]))
-	parent.add_child(_text("%s × %d" % [definition.display_name, item["quantity"]], 20))
-	if item.get("nutrition_multiplier",1) > 1 or item.get("shelf_life_multiplier",1) > 1: parent.add_child(_text("制作者加成：营养 ×%.2f，保质期 ×%.2f" % [item.get("nutrition_multiplier",1),item.get("shelf_life_multiplier",1)],14))
-	parent.add_child(_text("单份 %.2f kg / %.2f L\n耐久 %.0f   水量 %.2f L%s" % [definition.unit_weight_kg, definition.unit_volume_l, item["durability"], item["water_l"], "\n基础补给 · 不可出售" if item["free_supply"] else ""], 14))
+	parent.add_child(_wrapped_text("%s × %d" % [definition.display_name, item["quantity"]], 20))
+	if item.get("nutrition_multiplier",1) > 1 or item.get("shelf_life_multiplier",1) > 1: parent.add_child(_wrapped_text("制作者加成：营养 ×%.2f，保质期 ×%.2f" % [item.get("nutrition_multiplier",1),item.get("shelf_life_multiplier",1)],14))
+	parent.add_child(_wrapped_text("单份 %.2f kg / %.2f L\n耐久 %.0f   水量 %.2f L%s" % [definition.unit_weight_kg, definition.unit_volume_l, item["durability"], item["water_l"], "\n基础补给 · 不可出售" if item["free_supply"] else ""], 14))
 	var buttons := HBoxContainer.new()
 	parent.add_child(buttons)
 	_button(buttons, "旋转 R", _rotate_selection)
@@ -280,7 +309,7 @@ func _text(value: String, font_size: int) -> Label:
 	var label := Label.new()
 	label.text = value
 	label.add_theme_font_size_override("font_size", font_size)
-	label.add_theme_color_override("font_color", Color("dddbbc"))
+	label.add_theme_color_override("font_color", WildUiTheme.TEXT)
 	return label
 
 
@@ -292,3 +321,11 @@ func _button(parent: Control, title: String, action: Callable) -> Button:
 	button.pressed.connect(action)
 	parent.add_child(button)
 	return button
+
+
+## 流式页脚需要自然宽度；只有已获得栏宽的详情文字启用换行。
+func _wrapped_text(value: String, font_size: int) -> Label:
+	var label: Label = _text(value,font_size)
+	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	return label

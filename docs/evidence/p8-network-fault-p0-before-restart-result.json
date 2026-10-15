@@ -1,0 +1,10 @@
+{
+	"configured_rtt_ms": 150,
+	"crash_stage": true,
+	"drop_every": 20,
+	"dropped_packets": 10,
+	"failed": 0,
+	"passed": 19,
+	"retransmissions": 0,
+	"sent_packets": 212
+}

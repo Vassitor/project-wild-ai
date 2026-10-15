@@ -10,6 +10,8 @@ var role: String = ""
 var port: int = 0
 var case_root: String = ""
 var fault: bool = false
+var fault_rtt_ms: int = 0
+var drop_every: int = 100
 var passed: int = 0
 var failed: int = 0
 var results: Dictionary = {}
@@ -24,11 +26,14 @@ const CONTENT: WildSurvivalContent = preload("res://data/survival_content.tres")
 const FIXTURES = preload("res://tests/p35_fixtures.gd")
 
 func _ready() -> void:
+	# 无渲染进程也限帧，避免测试空转挤占其他进程的连接 / 保存调度。
+	Engine.max_fps = 60
 	for argument: String in OS.get_cmdline_user_args():
 		if argument.begins_with("--role="): role = argument.trim_prefix("--role=")
 		if argument.begins_with("--port="): port = argument.trim_prefix("--port=").to_int()
 		if argument.begins_with("--case-root="): case_root = argument.trim_prefix("--case-root=")
-		if argument == "--fault=100": fault = true
+		if argument.begins_with("--fault="): fault_rtt_ms = argument.trim_prefix("--fault=").to_int(); fault = fault_rtt_ms > 0
+		if argument.begins_with("--drop-every="): drop_every = argument.trim_prefix("--drop-every=").to_int()
 	assert(case_root.begins_with("res://.godot/verification/") and role in ["host","client"] and port >= 1024,"isolated arguments required")
 	config = (load("res://data/game_config.tres") as WildGameConfig).duplicate(true)
 	config.game_seconds_per_real_second = 120
@@ -39,8 +44,8 @@ func _ready() -> void:
 	network.bind_address = "127.0.0.1"
 	print("%s UDP port %d" % [role,port])
 	network.multiplayer.peer_connected.connect(func(peer: int) -> void: print("%s peer connected %d" % [role,peer]))
-	network.fault_delay_ms = 50 if fault else 0
-	network.fault_drop_every = 100 if fault else 0
+	network.fault_delay_ms = ceili(fault_rtt_ms/2.0) if fault else 0
+	network.fault_drop_every = maxi(2,drop_every) if fault else 0
 	network.command_completed.connect(_on_result)
 	network.connection_status.connect(_on_status)
 	network.room_ended.connect(_on_end)
@@ -61,7 +66,7 @@ func check(value: bool, label: String) -> void:
 		failed += 1
 		push_error("%s FAIL %s" % [role,label])
 
-func _wait(predicate: Callable, seconds: float = 10) -> bool:
+func _wait(predicate: Callable, seconds: float = 30) -> bool:
 	var deadline: int = Time.get_ticks_msec()+int(seconds*1000)
 	while not predicate.call() and Time.get_ticks_msec() < deadline:
 		await get_tree().create_timer(0.05).timeout

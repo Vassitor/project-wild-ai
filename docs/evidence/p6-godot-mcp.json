@@ -1,0 +1,8 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "{\n  \"output\": [\n    \"Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\\r\",\n    \"\",\n    \"OpenGL API 3.3.0 - Build 30.0.101.1960 - Compatibility - Using Device: Intel - Intel(R) Iris(R) Xe Graphics\\r\",\n    \"\",\n    \"\\r\",\n    \"\",\n    \"P6 graphical preview: isolated dynamic wildlife, actual arrow / hunting loot and animal injury\\r\",\n    \"\"\n  ],\n  \"errors\": []\n}"
+    }
+  ]
+}

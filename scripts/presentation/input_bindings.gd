@@ -9,6 +9,7 @@ const KEYS: Dictionary = {
 	&"inventory": KEY_TAB, &"craft": KEY_C,
 	&"body_details": KEY_H,
 	&"skills": KEY_K,
+	&"field_guide": KEY_F1,
 	&"build": KEY_B, &"rotate_item": KEY_R, &"pause": KEY_ESCAPE,
 }
 

@@ -1,6 +1,6 @@
 class_name WildP3Journey
 extends RefCounted
-## 自动策略验证：用默认600资金买20份干粮，真实移动 / 采集 / 建造 / 饮食 / 睡眠走完整7日。
+## 自动策略验证：用默认600资金买17份干粮 / 2绷带（590），真实移动与行动走完整7日。
 ## 加速只在测试调用时间入口，不改变7日目标、材料、身体或行动费用；不是正常速度人工试玩。
 const CONFIG: WildGameConfig = preload("res://data/game_config.tres")
 const CATALOG: WildItemCatalog = preload("res://data/item_catalog.tres")
@@ -23,7 +23,8 @@ func run(seed_text: String, stop_after_setup: bool = false) -> WildBaseState:
 	var service := WildBaseService.new(CONFIG,CATALOG,memory.load_records,memory.save_record,Callable(),generator.generate,CONTENT)
 	if not service.initialize("p").successful: return null
 	for index: int in range(5):
-		if not service.submit(WildGameCommand.new("p",&"shop.buy",{"definition_id":"ration","quantity":4})).successful: return null
+		if not service.submit(WildGameCommand.new("p",&"shop.buy",{"definition_id":"ration","quantity":1 if index == 4 else 4})).successful: return null
+	if not service.submit(WildGameCommand.new("p",&"shop.buy",{"definition_id":"bandage","quantity":2})).successful: return null
 	var view: Dictionary = service.snapshot()
 	for entry: Dictionary in view["containers"]["warehouse"]["entries"]:
 		var current: Dictionary = service.snapshot()
@@ -52,7 +53,8 @@ func run(seed_text: String, stop_after_setup: bool = false) -> WildBaseState:
 		var day: int = int(state.survival.elapsed_seconds/86400)
 		if day != _last_cooking_day:
 			_last_cooking_day = day
-			if not gather("root"): break
+			# P6 外部风险下先使用已携带的原料，避免每天无用重复远行采集。
+			if count(&"root") == 0 and not gather("root"): break
 			if not return_to_camp(): break
 			var fire: String = WildBuildingRules.nearby(state,"p","fire")
 			if fire.is_empty():
@@ -75,6 +77,7 @@ func run(seed_text: String, stop_after_setup: bool = false) -> WildBaseState:
 func maintain() -> bool:
 	if state.survival.outcome != "running": return true
 	var body: WildBodyState = state.survival.bodies["p"]
+	if body.bleeding and not _stop_bleeding(): return false
 	if body.water < 60:
 		var spring: Dictionary = nearest_resource("spring")
 		if spring.is_empty() or not walk_to(Vector2i(spring["x"],spring["y"])): return false
@@ -96,6 +99,7 @@ func act(payload: Dictionary,care: bool = true) -> bool:
 	if care and not maintain(): return false
 	if state.survival.outcome != "running": return true
 	if care and not walk_to(original_cell): return false
+	if payload["action"] == "sleep" and state.survival.bodies["p"].bleeding and not _stop_bleeding(): return false
 	var result: WildOperationResult = WildSurvivalActions.start(state,"p",payload,CONFIG,CATALOG,CONTENT)
 	if not result.successful:
 		failure = "%s failed: %s at %.1fh" % [payload,result.code,state.survival.elapsed_seconds/3600]
@@ -103,6 +107,13 @@ func act(payload: Dictionary,care: bool = true) -> bool:
 	if payload["action"] == "sleep": WildSurvivalSimulation.sleep(state,"p",CONFIG,CATALOG,CONTENT)
 	else: advance(state.survival.actions["p"]["remaining"],"idle")
 	return true
+
+func _stop_bleeding() -> bool:
+	var id: String = WildInventoryOperations.choose(state,&"bandage")
+	if id.is_empty():
+		failure = "自动策略绷带已用尽"
+		return false
+	return act({"action":"treat","item_id":id},false)
 
 func advance(seconds: float,activity: String) -> void:
 	WildSurvivalSimulation.queue_time(state.survival,seconds,activity)

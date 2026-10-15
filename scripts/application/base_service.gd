@@ -57,7 +57,11 @@ func initialize(owner: String) -> WildOperationResult:
 	var migrated: bool = initial.phase == WildRunFlow.Phase.PREPARATION and not initial.active_run.has("seed")
 	if migrated:
 		initial.active_run["seed"] = WildWorldGenerator.random_seed()
-	if recovered or migrated or not loaded.payload.get("exists", false):
+	var combat_migrated: bool = false
+	if initial.survival != null and _content != null:
+		WildProgressionWorld.initialize(initial,_content)
+		combat_migrated = WildCombatWorld.initialize(initial,_config)
+	if recovered or migrated or combat_migrated or not loaded.payload.get("exists", false):
 		var saved: WildOperationResult = _save.call(initial.record(), recovered)
 		if not saved.successful:
 			return saved
@@ -84,11 +88,13 @@ func snapshot() -> Dictionary:
 	var overload: float = clampf((view["carried_weight_kg"] - _config.soft_weight_limit_kg) / (_config.hard_weight_limit_kg - _config.soft_weight_limit_kg), 0.0, 1.0)
 	view["movement_multiplier"] = 1.0 - overload * _config.maximum_weight_slowdown
 	view["skills"] = WildSkillRules.snapshot(_state.skills,_config.skill_rules)
+	view["cooperation"] = _state.cooperation.duplicate(true)
 	return view
 
 
 ## 预览走同一规则但只修改副本，不保存、不产生收据。
 func preview_transfer(actor: String, payload: Dictionary) -> WildOperationResult:
+	if WildCoopProfileRules.blocked(_state): return WildOperationResult.reject(&"COOP_RESERVED")
 	if actor != _state.player_id:
 		return WildOperationResult.reject(&"UNKNOWN_ACTOR")
 	if _state.survival != null and _state.survival.actions.has(actor): return WildOperationResult.reject(&"ACTION_BUSY")
@@ -105,6 +111,7 @@ func submit(command: WildGameCommand) -> WildOperationResult:
 	if command.request_id.is_empty():
 		return WildOperationResult.reject(&"INVALID_REQUEST")
 	var signature: String = "%s|%s|%s" % [command.actor_id, command.operation, JSON.stringify(command.payload, "", true)]
+	if str(command.operation).begins_with("coop."): signature = "%s|%s|%s" % [command.actor_id,command.operation,WildCanonicalData.digest(command.payload)]
 	if _state.receipts.has(command.request_id):
 		var receipt: Dictionary = _state.receipts[command.request_id]
 		if receipt["signature"] != signature:
@@ -133,10 +140,13 @@ func submit(command: WildGameCommand) -> WildOperationResult:
 
 func _execute(state: WildBaseState, command: WildGameCommand) -> WildOperationResult:
 	var operation: StringName = command.operation
+	if str(operation).begins_with("coop."): return WildCoopProfileRules.execute(state,str(operation),command.payload,_config,_catalog)
+	if WildCoopProfileRules.blocked(state): return WildOperationResult.reject(&"COOP_RESERVED")
 	if operation in [&"skill.unlock",&"skill.train"]:
 		if state.phase not in [WildRunFlow.Phase.BASE,WildRunFlow.Phase.WILDERNESS]: return WildOperationResult.reject(&"INVALID_PHASE")
 		if state.survival != null and state.survival.actions.has(command.actor_id): return WildOperationResult.reject(&"ACTION_BUSY")
 		return WildSkillRules.learn(state,command.payload,_config.skill_rules,operation == &"skill.train")
+	if operation == &"combat.attack": return WildCombatRules.attack(state,command.actor_id,command.payload,_config,_catalog)
 	if str(operation).begins_with("survival."):
 		return WildSurvivalCommands.execute(state,command,_config,_catalog,_content)
 	if operation == &"inventory.transfer":
@@ -172,6 +182,7 @@ func _execute(state: WildBaseState, command: WildGameCommand) -> WildOperationRe
 			if _content != null:
 				state.survival = WildSurvivalSimulation.create(state.player_id,state.active_run["seed"])
 				WildProgressionWorld.initialize(state,_content)
+				WildCombatWorld.initialize(state,_config)
 				WildSurvivalSimulation.explore(state,state.player_id)
 			else: state.active_run["exploration_only"] = true
 		else:
@@ -326,6 +337,10 @@ func inspect_resource(actor: String, payload: Dictionary) -> WildOperationResult
 		return WildOperationResult.reject(&"INVALID_REQUEST")
 	var id: String = str(payload.get("resource_id",""))
 	if _state.survival != null:
+		if _state.survival.prey.has(id):
+			var animal: Dictionary = _state.survival.prey[id]
+			var point: Vector2 = WildCombatWorld.position(animal,_state.world)
+			return WildOperationResult.accept(WildCombatView.animals(_state.survival)[id]) if animal["alive"] and _state.world.players[actor].distance_to(point) <= 1.5*_state.world.tile_pixels and WildCombatRules.line_clear(_state.world,_state.world.players[actor],point) else WildOperationResult.reject(&"OUT_OF_REACH")
 		if _state.survival.buildings.has(id):
 			var building: Dictionary = _state.survival.buildings[id]
 			return WildOperationResult.accept(building.duplicate(true)) if WildBuildingRules.in_reach(_state.world,actor,building) else WildOperationResult.reject(&"OUT_OF_REACH")
@@ -375,7 +390,9 @@ func survival_snapshot(actor: String) -> Dictionary:
 
 func world_dynamic() -> Dictionary:
 	if _state.world == null: return {}
-	return {"resources":_state.world.resources.duplicate(true),"buildings":_state.survival.buildings.duplicate(true) if _state.survival != null else {},"outputs":_state.survival.outputs.duplicate(true) if _state.survival != null else {},"blocked_cells":_state.world.blocked_cells.duplicate(),"prey":_state.survival.prey.duplicate(true) if _state.survival != null else {}}
+	var view: Dictionary = {"resources":_state.world.resources.duplicate(true),"buildings":_state.survival.buildings.duplicate(true) if _state.survival != null else {},"outputs":_state.survival.outputs.duplicate(true) if _state.survival != null else {},"blocked_cells":_state.world.blocked_cells.duplicate(),"prey":WildCombatView.animals(_state.survival) if _state.survival != null else {}}
+	view.merge(WildCombatView.create(_state,_state.player_id))
+	return view
 
 
 ## 应用层唯一时间入口。分钟边界在候选状态上推进；关键点保存失败不提交产出 / 结算。

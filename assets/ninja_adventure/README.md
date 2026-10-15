@@ -25,3 +25,13 @@ python tools/prepare_ninja_assets.py "<Ninja Adventure - Asset Pack 解压目录
 原包没有一一对应的皮甲、绷带、打火石专属图标：皮甲暂用皮革袋，绷带用医疗包，打火石用石块；草药制剂用药瓶，干粮用饭团，根茎用根菜图标。熟鱼、烤根茎以原料图像着色区分；物品中文详情与稳定 ID 是识别依据。衣物图标不代表新装备规则。
 
 完整攻击、游泳、受伤和死亡动作仍在官方原包中，没有接入为可执行玩法。当前只有待机 / 行走与环境装饰动画。
+
+## 2026-10-14 UI 样式适配
+
+`ui/` 新增五张木质主题 PNG，来源为同包 `Ui/Theme/Theme Wood/` 的九宫格面板、普通 / 悬停 / 按下 / 禁用按钮。适配为棕木边框、深森林绿内衬与金色悬停状态，最近邻放大两倍；逐图来源见 `ui/manifest.json`。沿用此目录的 CC0 原许可，不新增付费素材或分发字体。
+
+```powershell
+python tools/prepare_ninja_ui.py "<Ninja Adventure - Asset Pack 解压目录>"
+```
+
+游戏直接读取提取后的图片，不依赖 `.godot/asset-downloads/` 缓存。UI 改版与验证见 [记录](../../docs/16-ui-redesign.md)。

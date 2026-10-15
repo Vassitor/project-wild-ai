@@ -66,3 +66,5 @@
 ![变体与耗尽差分](previews/ninja-variants.png)
 
 ![库存图标](previews/ninja-inventory.png)
+
+P6（2026-10-14）保留以上 Ninja Adventure 资产与动画。兔 / 野猪 / 狼使用 animal_art.gd 原生像素形状、简易步行动效与血条，箭 / 命中数字来自世界绘制；这些是项目自制显示，没有新增外部动物素材。美术细化留待整合阶段，证据见 P6 报告。

@@ -10,6 +10,7 @@ var _message: Label
 var _pending_request: String = ""
 var _config: WildGameConfig
 var _content: WildSurvivalContent
+var _sections: Dictionary[String, VBoxContainer] = {}
 
 ## 连接结束后撤销等待状态；旧房间回执不能锁住下一次动作菜单。
 func reset_pending() -> void:
@@ -21,32 +22,32 @@ func configure(session: WildLocalSession, actor: String, config: WildGameConfig 
 	_config = config if config != null else WildGameConfig.new()
 	_content = content if content != null else WildSurvivalContent.new()
 	_session.command_resolved.connect(_on_command_resolved)
-	var style := StyleBoxFlat.new()
-	style.bg_color = Color("102219")
-	style.border_color = Color("7b8d62")
-	style.set_border_width_all(1)
-	style.set_content_margin_all(20)
-	add_theme_stylebox_override("panel",style)
+	add_theme_stylebox_override("panel", WildUiTheme.panel())
 	_body = VBoxContainer.new()
 	_body.add_theme_constant_override("separation",10)
 	add_child(_body)
 
 func open(target: Dictionary = {}) -> void:
+	_sections.clear()
 	for child: Node in _body.get_children():
 		_body.remove_child(child)
 		child.queue_free()
 	visible = true
-	var names: Dictionary = {"tree":"树木","stone":"散石","berry":"浆果丛","root":"根茎","fiber":"纤维植物","herb":"草药","branch":"落枝","spring":"清洁泉水","fish":"鱼点","camp":"临时营地","fire":"篝火","storage_box":"公共储物箱","output":"待领取产出","small_trap":"小型套索","large_trap":"大型陷阱","cooking_table":"料理台","rabbit":"兔栖息地","boar":"野猪栖息地"}
+	var names: Dictionary = {"tree":"树木","stone":"散石","berry":"浆果丛","root":"根茎","fiber":"纤维植物","herb":"草药","branch":"落枝","spring":"清洁泉水","fish":"鱼点","camp":"临时营地","fire":"篝火","storage_box":"公共储物箱","output":"待领取产出","small_trap":"小型套索","large_trap":"大型陷阱","cooking_table":"料理台","rabbit":"兔","boar":"野猪","wolf":"狼"}
 	var title := Label.new()
 	title.text = names.get(target.get("kind",""),"料理与营地")
 	title.add_theme_font_size_override("font_size",25)
+	title.add_theme_color_override("font_color",WildUiTheme.GOLD)
 	_body.add_child(title)
 	var help := Label.new()
-	help.text = "合作菜单不暂停，动作由房主确认；执行中可取消。\n睡眠投票将在完整合作阶段开放。" if _session.is_cooperative() else "选择动作后时间继续推进；执行中可取消。\n睡眠会跳过时间，仍消耗饮水、营养与燃料。"
-	help.add_theme_font_size_override("font_size",16)
+	help.text = "合作菜单不暂停，动作由房主确认；执行中可取消。\n完整合作大厅下方可提议 / 同意睡眠；遇险中断。F1 查看手册。" if _session.is_cooperative() else "选择动作后时间继续推进；执行中可取消。\n睡眠仍消耗饮水、营养与燃料。F1 查看手册。"
+	help.add_theme_font_size_override("font_size",14)
+	help.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	help.add_theme_color_override("font_color",WildUiTheme.MUTED)
 	_body.add_child(help)
 	var scroll := ScrollContainer.new()
-	scroll.custom_minimum_size.y = 220 if _session.is_cooperative() else 260
+	scroll.custom_minimum_size.y = 140
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_body.add_child(scroll)
 	var options := VBoxContainer.new()
@@ -81,6 +82,7 @@ func open(target: Dictionary = {}) -> void:
 	elif kind == "camp":
 		var level: int = int(target.get("level",1))
 		var camp_info := Label.new()
+		camp_info.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		camp_info.text = "营地 %d · 休息回血 ×%.1f" % [level,_content.camp_hp_multipliers[level-1]]
 		options.add_child(camp_info)
 		if level < 3: _add(options,"升级营地 %d · 90 分钟 · 建造节点 %d" % [level+1,1 if level == 1 else 3],{"action":"upgrade","building_id":target["id"]})
@@ -95,18 +97,21 @@ func open(target: Dictionary = {}) -> void:
 			_add(options,"双份捕鱼 · 饵 2 · 捕鱼节点 2",{"action":"fish","resource_id":target["id"],"version":target["version"],"bait":bait,"double":true})
 	elif kind in ["small_trap","large_trap"]:
 		var status := Label.new()
+		status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		status.text = "剩余使用 %d / 3 · 饵 %d / 3 · %s\n只捕获 6 格内的对应实际猎物；无猎物不扣饵。" % [target["uses_left"],target["bait"],"已有捕获，等待收取" if not target["capture"].is_empty() else "距检查 %.1f h" % (maxf(0,target["next_check"]-_session.survival_snapshot(_actor)["elapsed_seconds"])/3600)]
 		options.add_child(status)
 		_add(options,"收取捕获 · 5 分钟",{"action":"trap_collect","building_id":target["id"]})
 		for quantity: int in [1,2,3]: _add(options,"加浆果饵 %d" % quantity,{"action":"trap_bait","building_id":target["id"],"quantity":quantity})
 		_add(options,"维护 · 纤维 2 · 恢复 1 次使用 · 10 分钟",{"action":"trap_maintain","building_id":target["id"]})
-	elif kind in ["rabbit","boar"]:
+	elif kind in ["rabbit","boar","wolf"]:
 		var habitat := Label.new()
-		habitat.text = "静态%s栖息标记。附近放置%s并加浆果饵。\n游走 / 战斗将在 P6 开放。" % ["兔" if kind == "rabbit" else "野猪","小套索" if kind == "rabbit" else "大型陷阱"]
+		habitat.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		habitat.text = "%s · 血量 %.1f · %s\n关闭菜单后，主手装备小刀 / 斧 / 弓，左键向鼠标方向攻击。" % [{"rabbit":"兔","boar":"野猪","wolf":"狼"}[kind],target.get("hp",0),target.get("mode","wander")]
 		options.add_child(habitat)
 		if int(levels.get("hunting",0)) >= 2:
 			var tracks := Label.new()
-			tracks.text = "足迹辨识：%s，所在格 (%d, %d)，当前存活。" % ["兔" if kind == "rabbit" else "野猪",target["x"],target["y"]]
+			tracks.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			tracks.text = "足迹辨识：%s，当前格 (%d, %d)，栖息格 (%d, %d)。地面足迹保留 6 小时。" % [{"rabbit":"兔","boar":"野猪","wolf":"狼"}[kind],target["x"],target["y"],target.get("home_x",target["x"]),target.get("home_y",target["y"])]
 			options.add_child(tracks)
 	if kind not in ["camp","output","fish"]:
 		_add(options,"建临时营地 · 木材 8、纤维 6 · 60 分钟",{"action":"build","recipe":"camp"})
@@ -141,11 +146,28 @@ func _add(parent: Control,label: String,payload: Dictionary) -> void:
 	_add_command(parent,label,&"survival.start",payload)
 
 func _add_command(parent: Control,label: String,operation: StringName,payload: Dictionary) -> void:
+	var section_name: String = _section_name(str(payload.get("action","")))
+	if not _sections.has(section_name):
+		var card := PanelContainer.new()
+		card.theme_type_variation = &"CardPanel"
+		parent.add_child(card)
+		var section := VBoxContainer.new()
+		card.add_child(section)
+		var heading := Label.new()
+		heading.text = section_name
+		heading.add_theme_color_override("font_color",WildUiTheme.GOLD)
+		heading.add_theme_font_size_override("font_size",15)
+		section.add_child(heading)
+		_sections[section_name] = section
 	var button := Button.new()
-	button.text = label
-	button.custom_minimum_size.y = 36
+	var split: int = label.find(" · ")
+	if payload.get("action","") == "fish" and split >= 0: split = label.find(" · ",split+3)
+	button.text = label.substr(0,split) + "\n" + label.substr(split+3) if split >= 0 else label
+	button.tooltip_text = label
+	button.add_theme_font_size_override("font_size",16)
+	button.custom_minimum_size.y = 54 if split >= 0 else 40
 	button.focus_mode = Control.FOCUS_NONE
-	parent.add_child(button)
+	_sections[section_name].add_child(button)
 	var requirement: Dictionary = _content.recipe(str(payload.get("recipe","")))
 	if payload.get("action","") == "fish" and payload.get("double",false): requirement = {"skill":"fishing","tier":2}
 	if payload.get("action","") == "upgrade":
@@ -169,6 +191,14 @@ func _add_command(parent: Control,label: String,operation: StringName,payload: D
 			_message.text = "等待房主确认…"
 		else: _message.text = WildErrorMessages.describe(result.code))
 
+## 分类只影响阅读顺序，权限 / 费用仍由会话和领域规则检查。
+func _section_name(action: String) -> String:
+	if action in ["gather","drink","fill","fish"]: return "附近资源与取水"
+	if action in ["treat","rest","sleep"]: return "身体照料与休息"
+	if action in ["build","upgrade","light","fuel"]: return "营地建设与火源"
+	if action in ["trap_collect","trap_bait","trap_maintain","demolish"]: return "维护与收取"
+	return "料理、制造与产出"
+
 func _on_command_resolved(request: String, result: WildOperationResult) -> void:
 	if request != _pending_request: return
 	_pending_request = ""
@@ -176,4 +206,5 @@ func _on_command_resolved(request: String, result: WildOperationResult) -> void:
 		visible = false
 		action_started.emit()
 	elif is_instance_valid(_message): _message.text = WildErrorMessages.describe(result.code)
+
 

@@ -1,13 +1,15 @@
-[gd_resource type="Resource" script_class="WildGameConfig" load_steps=4 format=3]
+[gd_resource type="Resource" script_class="WildGameConfig" load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://scripts/domain/game_config.gd" id="1_config"]
 [ext_resource type="Resource" path="res://data/health_config.tres" id="2_health"]
 [ext_resource type="Resource" path="res://data/skill_catalog.tres" id="3_skills"]
+[ext_resource type="Resource" path="res://data/combat_config.tres" id="4_combat"]
 
 [resource]
 script = ExtResource("1_config")
 health_rules = ExtResource("2_health")
 skill_rules = ExtResource("3_skills")
+combat_rules = ExtResource("4_combat")
 design_version = "0.2"
 save_version = 1
 generator_version = 1

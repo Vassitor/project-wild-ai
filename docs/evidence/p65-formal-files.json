@@ -1,0 +1,21 @@
+{
+  "date": "2026-10-15",
+  "checks": [
+    {
+      "name": "base_state.json",
+      "baseline_length": 25902,
+      "final_length": 25902,
+      "last_write_local": "2026-10-13 16:46:46",
+      "unchanged": true
+    },
+    {
+      "name": "base_state.json.bak",
+      "baseline_length": 228157,
+      "final_length": 228157,
+      "last_write_local": "2026-10-13 16:46:46",
+      "unchanged": true
+    }
+  ],
+  "formal_commit_logs_created": false,
+  "known_test_read_incident": "One UI handoff test used Window metadata instead of SceneTree; fixed and rerun with explicit isolated path guards."
+}

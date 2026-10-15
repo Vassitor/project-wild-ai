@@ -1,0 +1,12 @@
+{
+	"active_game_seconds": 49380.2001991271,
+	"default_clock": 120,
+	"elapsed_seconds": 604800.0,
+	"failure": "",
+	"hp": 100.0,
+	"scope": "30 FPS headless automatic driver, actual frame delta, only legal sleep skips; not manual playtest",
+	"seed": "31693",
+	"sleep_game_seconds": 555419.799800873,
+	"wall_seconds": 562.169,
+	"won": true
+}

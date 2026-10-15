@@ -31,7 +31,9 @@ static func decode(data: Dictionary, state: WildBaseState, config: WildGameConfi
 		if not WildBodyHealthCodec.restore(raw,body,config.health_rules,state.world.seed_text,actor): return null
 		run.bodies[actor] = body
 	if not run.bodies.has(state.player_id) or run.bodies.size() != state.world.players.size(): return null
-	if not WildProgressionCodec.restore(data.get("progression",null),run,state.world,config): return null
+	var combat_raw: Variant = data.get("combat",null)
+	var dynamic: bool = combat_raw is Dictionary and combat_raw.get("initialized",false) == true
+	if not WildProgressionCodec.restore(data.get("progression",null),run,state.world,config,dynamic): return null
 	if cooperative:
 		var living: bool = false
 		for body: WildBodyState in run.bodies.values():
@@ -65,6 +67,12 @@ static func decode(data: Dictionary, state: WildBaseState, config: WildGameConfi
 					if resource["x"] == x and resource["y"] == y: return null
 				occupied[cell] = true
 	WildBuildingRules.rebuild_obstacles(state.world,run)
+	if not WildCombatCodec.restore(combat_raw,run,state.world,config): return null
+	var sleep_states: Variant = data.get("sleep_random_states",{})
+	if not sleep_states is Dictionary: return null
+	for actor: Variant in sleep_states:
+		if not run.bodies.has(actor) or not WildWorldGenerator.valid_seed(sleep_states[actor],true): return null
+	run.sleep_random_states = sleep_states.duplicate()
 	for point: Vector2 in state.world.players.values():
 		if not WildWorldRules.feet_clear(state.world,point): return null
 	for actor: Variant in run.actions:
@@ -96,6 +104,13 @@ static func decode(data: Dictionary, state: WildBaseState, config: WildGameConfi
 		for kind: Variant in run.activities[actor]:
 			if not kind is String or kind not in WildSettlementRules.REWARDED_ACTIVITIES or unique.has(kind): return null
 			unique[kind] = true
+	var personal_explored: Variant = data.get("explored_by_actor",{})
+	if not personal_explored is Dictionary: return null
+	for actor: Variant in personal_explored:
+		if not run.bodies.has(actor) or not personal_explored[actor] is Dictionary: return null
+		for cell: Variant in personal_explored[actor]:
+			if not run.explored.has(cell) or personal_explored[actor][cell] != true: return null
+	run.explored_by_actor = personal_explored.duplicate(true)
 	return run
 
 static func _body(raw: Dictionary) -> WildBodyState:

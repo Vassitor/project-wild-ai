@@ -1,0 +1,30 @@
+{
+  "before": [
+    {
+      "LastWriteTimeUtc": "2026-10-13T08:46:46.3166688Z",
+      "Name": "base_state.json",
+      "Length": 25902
+    },
+    {
+      "LastWriteTimeUtc": "2026-10-13T08:46:46.3186658Z",
+      "Name": "base_state.json.bak",
+      "Length": 228157
+    }
+  ],
+  "after": [
+    {
+      "LastWriteTimeUtc": "2026-10-13T08:46:46.3166688Z",
+      "Name": "base_state.json",
+      "Length": 25902
+    },
+    {
+      "LastWriteTimeUtc": "2026-10-13T08:46:46.3186658Z",
+      "Name": "base_state.json.bak",
+      "Length": 228157
+    }
+  ],
+  "journals_absent": true,
+  "unchanged": true,
+  "date": "2026-10-15",
+  "method": "Filesystem metadata only; no formal save content opened by tests"
+}

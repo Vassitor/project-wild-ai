@@ -1,0 +1,51 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+client UDP port 60180
+client status 正在连接房主…
+client 4 ms PASS ENet localhost client
+client peer connected 1
+client status 已进入共享荒野
+client 3179 ms PASS complete map snapshot handshake
+client 3315 ms PASS host map decoded, no local regeneration
+client 3315 ms PASS private snapshot boundary
+client 5073 ms PASS movement stage
+client request move-done => OK
+client 7038 ms PASS gather contention stage
+client request race-gather => RESOURCE_RESERVED
+client 7202 ms PASS remote resource lock feedback
+client request gather-raced => OK
+client 31781 ms PASS build contention stage
+client request race-build => SITE_RESERVED
+client 32002 ms PASS remote footprint lock feedback
+client request build-raced => OK
+client 76717 ms PASS public box stage
+client 76717 ms PASS public box snapshot visible nearby
+client request withdraw => OK
+client 76836 ms PASS reliable transaction recovered from app loss
+client request withdraw => OK
+client 77057 ms PASS same request replay successful
+client request box-done => OK
+client 77495 ms PASS menu stage
+client 78696 ms PASS personal menu leaves authoritative time running
+client request menu-done => OK
+client 79583 ms PASS disconnect stage
+client request cancel-offline => OK
+client 79694 ms PASS start before disconnect
+client status 房主已断开；可使用原身份重连
+client status 正在连接房主…
+client peer connected 1
+client status 连接被拒绝：ROSTER_LOCKED
+client 81242 ms PASS late new member rejected over network
+client status 正在连接房主…
+client 81242 ms PASS reconnect ENet client
+client peer connected 1
+client status 已进入共享荒野
+client 81479 ms PASS reconnect secret accepted
+client 81479 ms PASS reconnect snapshot no new actor or unfinished action
+client request reconnect-done => OK
+client 81762 ms PASS final agreement stage
+client 81763 ms PASS client authoritative inventory matches host
+client request ready-end => OK
+client 81869 ms PASS host saved and ended notification
+client transport status 2, peers [1], sent 1598, received 690
+P3.5 ENet client: 24 passed, 0 failed

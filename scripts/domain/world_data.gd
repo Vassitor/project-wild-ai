@@ -22,6 +22,7 @@ var version: int = 0
 var attempts: int = 0
 var used_fallback: bool = false
 var blocked_cells: Dictionary = {} # 运行派生的建筑占位，不改地形初始快照。
+var resource_players: int = 1 # 1 为单机 / 旧验证地图；完整合作出发时固定。
 
 
 func contains(cell: Vector2i) -> bool:
@@ -103,11 +104,17 @@ func copy() -> WildWorldData:
 	other.attempts = attempts
 	other.used_fallback = used_fallback
 	other.blocked_cells = blocked_cells.duplicate()
+	other.resource_players = resource_players
 	return other
 
 
 ## 地形按行编码，仍保存每一格；种子 / RNG 状态用字符串避免 JSON 大整数失真。
 func record() -> Dictionary:
+	var raw: Dictionary = _record()
+	raw["resource_players"] = resource_players
+	return raw
+
+func _record() -> Dictionary:
 	var positions: Dictionary = {}
 	for actor: String in players:
 		positions[actor] = [players[actor].x, players[actor].y]

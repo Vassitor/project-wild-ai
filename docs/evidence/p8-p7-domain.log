@@ -1,0 +1,6 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+P7 route gathering: {"attempts":1,"average_minutes_to_digested_meal":26.0,"average_water_cost":2.23333333333321,"nutrition_per_meal":[30,1,3,8,6],"samples":1,"scope":"Prepared fire and reachable targets; excludes travel, pursuit, fuel procurement; fishing bait pre-stocked.","successes":1}
+P7 route fishing: {"attempts":164,"average_minutes_to_digested_meal":70.2,"average_water_cost":6.65333333333296,"nutrition_per_meal":[0,15,30,10,2],"samples":100,"scope":"Prepared fire and reachable targets; excludes travel, pursuit, fuel procurement; fishing bait pre-stocked.","successes":100}
+P7 route hunting: {"attempts":1,"average_minutes_to_digested_meal":22.4,"average_water_cost":1.82666666666658,"nutrition_per_meal":[0,15,30,10,2],"samples":1,"scope":"Prepared fire and reachable targets; excludes travel, pursuit, fuel procurement; fishing bait pre-stocked.","successes":1}
+P7 integration checks: 265 passed, 0 failed

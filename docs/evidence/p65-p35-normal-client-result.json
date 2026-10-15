@@ -1,0 +1,27 @@
+{
+	"command_ms": [
+		126.0,
+		72.0,
+		129.0,
+		125.0,
+		128.0,
+		135.0,
+		72.0,
+		153.0,
+		136.0,
+		72.0,
+		125.0,
+		139.0
+	],
+	"dropped_packets": 0,
+	"elapsed_real_ms": 75947,
+	"failed": 0,
+	"fault_drop_every": 0,
+	"fault_layer": "application messages over real ENet, not OS UDP shaping",
+	"fault_rtt_ms": 0,
+	"forced_dropped_packets": 0,
+	"passed": 24,
+	"retransmissions": 0,
+	"role": "client",
+	"sent_packets": 1537
+}

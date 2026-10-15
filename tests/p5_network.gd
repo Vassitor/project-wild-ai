@@ -150,7 +150,7 @@ func _run_client() -> void:
 	panel.queue_free()
 	replica.submit(WildGameCommand.new("guest",&"base.close_station"))
 	await _marker("menu-checked")
-	check(await _wait(func() -> bool: return str(network.latest.get("notice","")).begins_with("catch:")),"actual capture stage")
+	check(await _wait(func() -> bool: return str(network.latest.get("notice","")).begins_with("catch:"),35),"actual capture stage")
 	check((await _request("survival.start",{"action":"trap_collect","building_id":trap_id},"guest-catch")).successful,"remote actual capture collection")
 	check(await _wait(func() -> bool: return network.latest["skills"]["experience"]["trap"] == 8),"collector XP and loot completion")
 	check((await _request("survival.start",{"action":"trap_collect","building_id":trap_id},"guest-catch")).successful,"collection receipt replay")

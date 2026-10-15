@@ -12,6 +12,10 @@ func _init(path: String) -> void:
 func load_records() -> WildOperationResult:
 	return WildOperationResult.accept({"exists": FileAccess.file_exists(_path) or FileAccess.file_exists(_path + ".bak"), "primary": _read(_path), "backup": _read(_path + ".bak")})
 
+## 提交头只有当前主记录有权威性；调用者无需读取不参与恢复的旧备份。
+func read_primary() -> Dictionary:
+	return _read(_path)
+
 
 func save_record(data: Dictionary, preserve_backup: bool = false) -> WildOperationResult:
 	var absolute: String = ProjectSettings.globalize_path(_path)

@@ -1,0 +1,67 @@
+{
+	"fishing": {
+		"attempts": 164,
+		"average_minutes_to_digested_meal": 70.2,
+		"average_water_cost": 6.65333333333296,
+		"nutrition_per_meal": [
+			0,
+			15,
+			30,
+			10,
+			2
+		],
+		"samples": 100,
+		"scope": "Prepared fire and reachable targets; excludes travel, pursuit, fuel procurement; fishing bait pre-stocked.",
+		"successes": 100
+	},
+	"gathering": {
+		"attempts": 1,
+		"average_minutes_to_digested_meal": 26.0,
+		"average_water_cost": 2.23333333333321,
+		"nutrition_per_meal": [
+			30,
+			1,
+			3,
+			8,
+			6
+		],
+		"samples": 1,
+		"scope": "Prepared fire and reachable targets; excludes travel, pursuit, fuel procurement; fishing bait pre-stocked.",
+		"successes": 1
+	},
+	"hunting": {
+		"attempts": 1,
+		"average_minutes_to_digested_meal": 22.4,
+		"average_water_cost": 1.82666666666658,
+		"nutrition_per_meal": [
+			0,
+			15,
+			30,
+			10,
+			2
+		],
+		"samples": 1,
+		"scope": "Prepared fire and reachable targets; excludes travel, pursuit, fuel procurement; fishing bait pre-stocked.",
+		"successes": 1
+	},
+	"loadouts": {
+		"fishing": {
+			"cost": 600,
+			"packed_volume_l": 6.0,
+			"packed_weight_kg": 4.6,
+			"remaining_currency": 0
+		},
+		"supplies": {
+			"cost": 590,
+			"packed_volume_l": 7.65,
+			"packed_weight_kg": 5.75,
+			"remaining_currency": 10
+		},
+		"training": {
+			"cost": 590,
+			"packed_volume_l": 4.15,
+			"packed_weight_kg": 3.25,
+			"remaining_currency": 10
+		}
+	}
+}

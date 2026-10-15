@@ -1,4 +1,4 @@
-param([string]$GodotPath = '', [switch]$SkipImport)
+param([string]$GodotPath = '', [int]$FaultRttMs = 100, [int]$DropEvery = 100, [switch]$SkipImport)
 # 真实双进程 ENet；每次随机端口 / 隔离档案，不访问正式身份与基地。
 $ErrorActionPreference = 'Stop'
 $taskRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
@@ -16,7 +16,7 @@ if ($LASTEXITCODE -ne 0 -or (Get-Content -LiteralPath (Join-Path $taskVerificati
 $taskUiLog = Get-Content -LiteralPath (Join-Path $taskVerification 'p35-ui-checks.log') -Raw
 if ($LASTEXITCODE -ne 0 -or $taskUiLog -match 'SCRIPT ERROR|Parse Error|leaked|still in use' -or $taskUiLog -notmatch 'P3.5 UI checks: \d+ passed, 0 failed') { throw 'UI checks failed.' }
 $taskCases = @()
-foreach ($taskFault in @(0,100)) {
+foreach ($taskFault in @(0,$FaultRttMs)) {
     $taskId = 'p35-' + [Guid]::NewGuid().ToString('N')
     $taskCase = Join-Path $taskVerification $taskId
     New-Item -ItemType Directory -Path $taskCase -Force | Out-Null
@@ -28,12 +28,12 @@ foreach ($taskFault in @(0,100)) {
     $taskClientProcess = $null
     try {
         $taskCommon = @('--headless','--path', ('"' + $taskRoot + '"'), 'res://tests/p35_network.tscn', '--log-file')
-        $taskHostArgs = $taskCommon + @(('"' + (Join-Path $taskCase 'host.log') + '"'),'--','--role=host',"--port=$taskPort", "--case-root=res://.godot/verification/$taskId", "--fault=$taskFault")
+        $taskHostArgs = $taskCommon + @(('"' + (Join-Path $taskCase 'host.log') + '"'),'--','--role=host',"--port=$taskPort", "--case-root=res://.godot/verification/$taskId", "--fault=$taskFault", "--drop-every=$DropEvery")
         $taskHostProcess = Start-Process -FilePath $GodotPath -ArgumentList $taskHostArgs -WorkingDirectory $taskRoot -WindowStyle Hidden -PassThru
         $taskReadyDeadline = [DateTime]::UtcNow.AddSeconds(15)
         while (-not (Test-Path -LiteralPath (Join-Path $taskCase 'ready.txt')) -and [DateTime]::UtcNow -lt $taskReadyDeadline -and -not $taskHostProcess.HasExited) { Start-Sleep -Milliseconds 100 }
         if (-not (Test-Path -LiteralPath (Join-Path $taskCase 'ready.txt'))) { throw "Server did not start: $taskCase" }
-        $taskClientArgs = $taskCommon + @(('"' + (Join-Path $taskCase 'client.log') + '"'),'--','--role=client',"--port=$taskPort", "--case-root=res://.godot/verification/$taskId", "--fault=$taskFault")
+        $taskClientArgs = $taskCommon + @(('"' + (Join-Path $taskCase 'client.log') + '"'),'--','--role=client',"--port=$taskPort", "--case-root=res://.godot/verification/$taskId", "--fault=$taskFault", "--drop-every=$DropEvery")
         $taskClientProcess = Start-Process -FilePath $GodotPath -ArgumentList $taskClientArgs -WorkingDirectory $taskRoot -WindowStyle Hidden -PassThru
         $taskDeadline = [DateTime]::UtcNow.AddSeconds(130)
         while ((-not $taskHostProcess.HasExited -or -not $taskClientProcess.HasExited) -and [DateTime]::UtcNow -lt $taskDeadline) { Start-Sleep -Milliseconds 250 }

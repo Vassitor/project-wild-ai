@@ -2,6 +2,7 @@ class_name WildSaveVersions
 extends RefCounted
 ## 未来子版本是兼容性问题，不当作损坏主档用旧备份覆盖。
 static func future(record: Dictionary) -> bool:
+	if _newer(record.get("cooperation",{}),"version") or _newer(record.get("lifecycle",{}),"version"): return true
 	if _newer(record.get("skills",{}),"skills_version"): return true
 	var run: Variant = record.get("active_run",{})
 	if run is Dictionary and _survival_future(run.get("survival",{})): return true
@@ -18,6 +19,7 @@ static func _newer(raw: Variant, key: String) -> bool:
 static func _survival_future(raw: Variant) -> bool:
 	if not raw is Dictionary: return false
 	if _newer(raw.get("progression",{}),"version"): return true
+	if _newer(raw.get("combat",{}),"version"): return true
 	var bodies: Variant = raw.get("bodies",{})
 	if bodies is Dictionary:
 		for body: Variant in bodies.values():

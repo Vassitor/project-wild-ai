@@ -1,0 +1,22 @@
+{
+  "nine_path_panel": {
+    "source": "Ui/Theme/Theme Wood/nine_path_panel.png",
+    "adaptation": "earth-tone palette; panel interior dark; nearest 2x"
+  },
+  "button_normal": {
+    "source": "Ui/Theme/Theme Wood/button_normal.png",
+    "adaptation": "earth-tone palette; panel interior dark; nearest 2x"
+  },
+  "button_hover": {
+    "source": "Ui/Theme/Theme Wood/button_hover.png",
+    "adaptation": "earth-tone palette; panel interior dark; nearest 2x"
+  },
+  "button_pressed": {
+    "source": "Ui/Theme/Theme Wood/button_pressed.png",
+    "adaptation": "earth-tone palette; panel interior dark; nearest 2x"
+  },
+  "button_disabled": {
+    "source": "Ui/Theme/Theme Wood/button_disabled.png",
+    "adaptation": "earth-tone palette; panel interior dark; nearest 2x"
+  }
+}

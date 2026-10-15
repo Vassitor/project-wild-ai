@@ -5,7 +5,7 @@ signal close_requested
 var _session: WildLocalSession
 var _actor: String
 var _config: WildGameConfig
-var _rows: VBoxContainer
+var _rows: GridContainer
 var _status: Label
 var _summary: Label
 var _pending: String = ""
@@ -16,31 +16,44 @@ func configure(session: WildLocalSession, config: WildGameConfig) -> void:
 	_session = session
 	_config = config
 	_session.command_resolved.connect(_resolved)
-	var style := StyleBoxFlat.new()
-	style.bg_color = Color("102219")
-	style.set_content_margin_all(20)
-	add_theme_stylebox_override("panel",style)
+	add_theme_stylebox_override("panel", WildUiTheme.panel())
+	resized.connect(_layout_cards)
 	var column := VBoxContainer.new()
 	column.add_theme_constant_override("separation",12)
 	add_child(column)
+	var title := Label.new()
+	title.text = "生存技能"
+	title.add_theme_font_size_override("font_size",26)
+	title.add_theme_color_override("font_color",WildUiTheme.GOLD)
+	column.add_child(title)
 	_summary = Label.new()
+	_summary.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_summary.add_theme_font_size_override("font_size",15)
 	column.add_child(_summary)
 	var scroll := ScrollContainer.new()
-	scroll.custom_minimum_size.y = 365
+	scroll.custom_minimum_size.y = 160
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	column.add_child(scroll)
-	_rows = VBoxContainer.new()
-	_rows.add_theme_constant_override("separation",14)
+	_rows = GridContainer.new()
+	_rows.columns = 3
+	_rows.add_theme_constant_override("h_separation",12)
+	_rows.add_theme_constant_override("v_separation",12)
 	_rows.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	scroll.add_child(_rows)
 	_status = Label.new()
 	_status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_status.add_theme_font_size_override("font_size",14)
+	_status.add_theme_color_override("font_color",WildUiTheme.MUTED)
 	column.add_child(_status)
 	var close := Button.new()
 	close.text = "关闭 · K / Esc"
 	close.custom_minimum_size.y = 38
 	close.pressed.connect(func() -> void: close_requested.emit())
 	column.add_child(close)
+
+func _layout_cards() -> void:
+	if _rows != null: _rows.columns = 3 if size.x >= 1050 else (2 if size.x >= 700 else 1)
 
 func reset_pending() -> void:
 	_pending = ""
@@ -50,6 +63,7 @@ func open(actor: String) -> void:
 	visible = true
 	_signature = ""
 	_status.text = "每分支 100 经验获 1 点；依序解锁，点数 1 / 2 / 3，基地钱学 300 / 600 / 1200。"
+	_layout_cards()
 	refresh()
 
 func _process(delta: float) -> void:
@@ -72,22 +86,41 @@ func refresh() -> void:
 		_rows.remove_child(child)
 		child.queue_free()
 	for branch: String in WildSkillCatalog.BRANCHES:
+		var card := PanelContainer.new()
+		card.theme_type_variation = &"CardPanel"
+		card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		_rows.add_child(card)
+		var branch_column := VBoxContainer.new()
+		branch_column.add_theme_constant_override("separation",8)
+		card.add_child(branch_column)
 		var title := Label.new()
-		title.text = "%s · 经验 %d · 可用点数 %d · 等级 %d / 3" % [_config.skill_rules.branch_names[branch],skills["experience"][branch],skills["points"][branch],skills["levels"][branch]]
+		title.text = "%s   %d / 3" % [_config.skill_rules.branch_names[branch],skills["levels"][branch]]
 		title.add_theme_font_size_override("font_size",20)
-		_rows.add_child(title)
+		title.add_theme_color_override("font_color",WildUiTheme.GOLD)
+		branch_column.add_child(title)
+		var experience := Label.new()
+		experience.text = "经验 %d · 可用点数 %d" % [skills["experience"][branch],skills["points"][branch]]
+		experience.add_theme_font_size_override("font_size",13)
+		experience.add_theme_color_override("font_color",WildUiTheme.MUTED)
+		branch_column.add_child(experience)
 		for tier: int in range(1,4):
+			var node_column := VBoxContainer.new()
+			node_column.add_theme_constant_override("separation",4)
+			branch_column.add_child(node_column)
 			var row := HBoxContainer.new()
-			_rows.add_child(row)
 			var learned: bool = int(skills["levels"][branch]) >= tier
 			var can_learn: bool = int(skills["levels"][branch])+1 == tier and _pending.is_empty()
 			var label := Label.new()
 			label.text = "%d · %s%s" % [tier,_config.skill_rules.descriptions[branch][tier-1]," ✓" if learned else ""]
 			label.add_theme_font_size_override("font_size",16)
-			label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-			row.add_child(label)
+			label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			label.custom_minimum_size.y = 40
+			label.add_theme_color_override("font_color",WildUiTheme.MUTED if learned else WildUiTheme.TEXT)
+			node_column.add_child(label)
+			node_column.add_child(row)
 			var unlock := Button.new()
 			unlock.name = "%s_%d_points" % [branch,tier]
+			unlock.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			unlock.text = "%d 点解锁" % _config.skill_rules.point_costs[tier-1]
 			unlock.disabled = not can_learn or skills["points"][branch] < _config.skill_rules.point_costs[tier-1]
 			unlock.pressed.connect(_learn.bind(branch,tier,false))
@@ -95,6 +128,7 @@ func refresh() -> void:
 			if money:
 				var train := Button.new()
 				train.name = "%s_%d_train" % [branch,tier]
+				train.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 				train.text = "学习 %d" % _config.skill_rules.training_costs[tier-1]
 				train.disabled = not can_learn or view["currency"] < _config.skill_rules.training_costs[tier-1]
 				train.pressed.connect(_learn.bind(branch,tier,true))

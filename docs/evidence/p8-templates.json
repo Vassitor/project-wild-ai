@@ -1,0 +1,30 @@
+{
+  "source": "https://godot-releases.nbg1.your-objectstorage.com/4.7.2-stable/Godot_v4.7.2-stable_export_templates.tpz",
+  "whole_archive_sha256_verified": false,
+  "entries": [
+    {
+      "name": "templates/windows_debug_x86_64_console.exe",
+      "size": 188928,
+      "zip_crc_verified": true,
+      "sha256": "5514c7645ee897a01f540d3cf22ede5badf92394521a08bfab66a54d7369e6e6"
+    },
+    {
+      "name": "templates/windows_debug_x86_64.exe",
+      "size": 103176704,
+      "zip_crc_verified": true,
+      "sha256": "51498b72b3a237f882ebd7d1787f06a4bc1eaf0572daab93837adcfd3cfdc107"
+    },
+    {
+      "name": "templates/windows_release_x86_64_console.exe",
+      "size": 188928,
+      "zip_crc_verified": true,
+      "sha256": "52bdcae9068e8d23b840e5c63b0c1798ffe2cb66144e5c4bc7af11fb8c8600df"
+    },
+    {
+      "name": "templates/windows_release_x86_64.exe",
+      "size": 109268480,
+      "zip_crc_verified": true,
+      "sha256": "d34d36f3be1a6c49c56525ae86469b92e4f417ddf0b43cf00dd80c385c4b0562"
+    }
+  ]
+}

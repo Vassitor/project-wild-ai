@@ -5,6 +5,8 @@ extends RefCounted
 static func find(state: WildBaseState, id: String) -> Dictionary:
 	for container: WildInventoryContainer in state.containers.values():
 		if container.carried and container.placements.has(id): return {"item":container.placements[id]["item"],"container":container}
+	for container: WildInventoryContainer in state.material_sources.values():
+		if container.placements.has(id): return {"item":container.placements[id]["item"],"container":container}
 	return {}
 
 static func choose(state: WildBaseState, definition: StringName, minimum_durability: float = 0.0) -> String:
@@ -16,13 +18,16 @@ static func choose(state: WildBaseState, definition: StringName, minimum_durabil
 
 static func reserve(state: WildBaseState, materials: Dictionary, fresh: bool = false) -> WildOperationResult:
 	var reservations: Array[Dictionary] = []
+	var sources: Array[WildInventoryContainer] = []
+	for slot: String in ["backpack","main_hand","off_hand"]: sources.append(state.containers[slot])
+	sources.append_array(state.material_sources.values())
 	for definition: String in materials:
 		var needed: int = int(materials[definition])
-		for slot: String in ["backpack","main_hand","off_hand"]:
-			for entry: Dictionary in state.containers[slot].placements.values():
+		for source: WildInventoryContainer in sources:
+			for entry: Dictionary in source.placements.values():
 				var item: WildItemInstance = entry["item"]
 				if str(item.item_id) != definition or (fresh and item.freshness_hours <= 0): continue
-				var amount: int = mini(needed, item.quantity)
+				var amount: int = mini(needed, maxi(0,item.quantity-int(state.material_reserved.get(item.instance_id,0))))
 				if amount > 0: reservations.append({"id":item.instance_id,"quantity":amount,"fresh":fresh})
 				needed -= amount
 		if needed > 0: return WildOperationResult.reject(&"MISSING_MATERIALS")

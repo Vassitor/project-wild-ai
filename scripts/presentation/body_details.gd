@@ -13,47 +13,76 @@ var _refresh_elapsed: float = 0
 
 func configure(session: WildLocalSession) -> void:
 	_session = session
-	var style := StyleBoxFlat.new()
-	style.bg_color = Color("102219")
-	style.border_color = Color("b5a477")
-	style.set_border_width_all(2)
-	style.set_content_margin_all(22)
-	add_theme_stylebox_override("panel",style)
+	add_theme_stylebox_override("panel", WildUiTheme.panel())
 	var column := VBoxContainer.new()
 	column.add_theme_constant_override("separation",15)
 	add_child(column)
 	var title := Label.new()
 	title.text = "身体与疗养 · H"
 	title.add_theme_font_size_override("font_size",26)
+	title.add_theme_color_override("font_color",WildUiTheme.GOLD)
 	column.add_child(title)
+	var scroll := ScrollContainer.new()
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.custom_minimum_size.y = 180
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	column.add_child(scroll)
+	var content := VBoxContainer.new()
+	content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	content.add_theme_constant_override("separation",14)
+	scroll.add_child(content)
 	_stats = Label.new()
-	column.add_child(_stats)
+	_stats.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	content.add_child(_stats)
 	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation",26)
-	column.add_child(row)
+	row.add_theme_constant_override("separation",16)
+	content.add_child(row)
 	_nutrition = Label.new()
-	_nutrition.custom_minimum_size.x = 305
+	_nutrition.custom_minimum_size.x = 270
+	_nutrition.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_nutrition.tooltip_text = "营养储备是 0–100 的游戏指标。衰弱采用压缩病程：任一营养低于 20 连续 24 游戏小时触发。"
-	row.add_child(_nutrition)
+	var nutrition_card := PanelContainer.new()
+	nutrition_card.theme_type_variation = &"CardPanel"
+	nutrition_card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(nutrition_card)
+	var nutrition_column := VBoxContainer.new()
+	nutrition_card.add_child(nutrition_column)
+	var nutrition_title := Label.new()
+	nutrition_title.text = "营养储备"
+	nutrition_title.add_theme_color_override("font_color",WildUiTheme.GOLD)
+	nutrition_column.add_child(nutrition_title)
+	nutrition_column.add_child(_nutrition)
 	_conditions = Label.new()
-	_conditions.custom_minimum_size.x = 350
+	_conditions.custom_minimum_size.x = 280
 	_conditions.tooltip_text = "出血：血量 −4 / h、健康 −1 / h；绷带止血。\n肠胃不适：饮水额外 −2 / h、健康 −2 / h。\n低营养持续 24 h 会衰弱，速度 ×0.85，恢复 ×0.7。"
 	_conditions.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	row.add_child(_conditions)
+	var conditions_card := PanelContainer.new()
+	conditions_card.theme_type_variation = &"CardPanel"
+	conditions_card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(conditions_card)
+	var conditions_column := VBoxContainer.new()
+	conditions_card.add_child(conditions_column)
+	var conditions_title := Label.new()
+	conditions_title.text = "症状与护甲"
+	conditions_title.add_theme_color_override("font_color",WildUiTheme.GOLD)
+	conditions_column.add_child(conditions_title)
+	conditions_column.add_child(_conditions)
 	_explanation = Label.new()
 	_explanation.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_explanation.add_theme_font_size_override("font_size",16)
-	column.add_child(_explanation)
+	content.add_child(_explanation)
 	var buttons := HBoxContainer.new()
 	column.add_child(buttons)
 	var care := Button.new()
 	care.text = "治疗 / 营地行动"
-	care.custom_minimum_size = Vector2(240,38)
+	care.custom_minimum_size = Vector2(200,40)
+	care.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	care.pressed.connect(func() -> void: care_requested.emit())
 	buttons.add_child(care)
 	var close := Button.new()
 	close.text = "关闭 · 继续探索"
-	close.custom_minimum_size = Vector2(240,38)
+	close.custom_minimum_size = Vector2(200,40)
+	close.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	close.pressed.connect(func() -> void: close_requested.emit())
 	buttons.add_child(close)
 

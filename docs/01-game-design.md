@@ -1,6 +1,6 @@
 # 2D 荒野生存：首版设计基线
 
-更新：2026-10-13。设计版本：0.2。状态：P0–P5 已实现，单机 7 日循环可玩，双人 ENet、身体疾病、个人技能、捕鱼、实际猎物陷阱与营地升级已验证。猎物目前为静态栖息实体，动物 AI / 战斗待 P6，完整四人生命周期待 P6.5。当前交付见 [P5 报告](15-p5-implementation.md)，此前见 [P3](12-p3-implementation.md)、[P3.5](13-p35-implementation.md)、[P4](14-p4-implementation.md) 报告。
+更新：2026-10-15。设计版本：0.2。状态：P0–P7 已实现，单机 7 日循环与完整 2–4 人合作生命周期可玩。合作已接入实际个人行装 / 成长、全员准备 / 加载、公共材料 / 赠送、睡眠投票、死亡 / 尸体 / 观战、原成员重连和逐人结算。当前交付见 [P7 内容整合报告](18-p7-implementation.md)，合作领域见 [P6.5 报告](17-p65-implementation.md)，此前见 [P3](12-p3-implementation.md)、[P3.5](13-p35-implementation.md)、[P4](14-p4-implementation.md)、[P5](15-p5-implementation.md)、[P6](16-p6-implementation.md) 报告。最终性能、跨设备与导出继续按 P8 验收。
 
 用户已授权确定全部待定项。本文是实现基线；规则追溯见 [已确定设计决策](03-design-decisions.md)，具体初始数值见 [配置表](05-initial-balance.md)，代码约束见 [工程规范](04-engineering-guidelines.md)。平衡配置可经验证调整，不保留设计占位项。
 

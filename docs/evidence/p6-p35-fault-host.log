@@ -1,0 +1,56 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+host UDP port 49395
+host 465 ms PASS isolated host world
+host status 房间已创建，等待第二位玩家
+host 487 ms PASS ENet UDP server
+host peer connected 1307136718
+host 2662 ms PASS real client handshake
+host request start => OK
+host 2932 ms PASS network host start
+host 4991 ms PASS client movement completed
+Movement: 27.20 pixels over 1.992 wall seconds
+host 4994 ms PASS authority input direction normalized, no client delta / teleport
+host request host-gather => OK
+host 5147 ms PASS host gather start
+host 5796 ms PASS remote contested pickup checked
+host 30847 ms PASS gather finished
+host 30847 ms PASS pickup conservation over ENet
+host request host-gather => OK
+host 30876 ms PASS network receipt replay no new output
+host 31109 ms PASS real camp placement
+host request camp => OK
+host 31377 ms PASS camp reservation
+host 32312 ms PASS remote same site race checked
+host 62905 ms PASS camp committed
+host 62908 ms PASS camp does not grant free box
+host 62910 ms PASS builder consumes once
+host 63648 ms PASS reachable box footprint
+host request build-box => OK
+host 64165 ms PASS independent box construction
+host 79186 ms PASS box committed after thirty game minutes
+host 79187 ms PASS box consumes six wood four fiber
+host request deposit => OK
+host 79302 ms PASS public deposit through request
+host 81876 ms PASS client public withdraw / replay completed
+host request compete-box => STALE_VERSION
+host 81921 ms PASS second actor stale concurrent box request rejected
+host 81924 ms PASS shared item transferred once
+host 83751 ms PASS personal menu test completed
+host 83751 ms PASS menu did not pause host clock
+host status client 断线，角色留在原地
+host 84479 ms PASS actual ENet peer disconnect
+host 84479 ms PASS disconnect cancels unfinished reservation
+host peer connected 260903781
+host peer connected 745641450
+host 86688 ms PASS real original member reconnect
+host 86689 ms PASS reconnect no duplicate actor
+host 86689 ms PASS reconnect preserves position
+host 86689 ms PASS offline character continued body simulation
+host 86690 ms PASS reconnect preserves loadout, no cancelled output
+host 87152 ms PASS client final state agreement
+host 87217 ms PASS host persisted before ending
+host status client 断线，角色留在原地
+host 87825 ms PASS host final disk recovery
+host transport status 0, peers [], sent 769, received 835
+P3.5 ENet host: 37 passed, 0 failed

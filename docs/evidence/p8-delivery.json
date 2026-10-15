@@ -1,0 +1,39 @@
+{
+  "candidate": {
+    "candidate": "0.2.0-rc1",
+    "content_fingerprint": "34e2ed45c94271fea63fde2b4fcdce9dfb4cfe6a97978b1efd2fd4837c3351ed",
+    "engine": "4.7.2-stable (official)",
+    "protocol": 3,
+    "version": 1
+  },
+  "archive": "build\\WildBetween-0.2.0-rc1-windows-x64.zip",
+  "zip_bytes": 39820901,
+  "sha256": "bdeec40483db90e303ed42e4ec53e11a2c6209b40620d2b84251c2925a207414",
+  "archive_entries": [
+    "WildBetween.exe",
+    "WildBetween.pck",
+    "WildBetween.console.exe",
+    "Play-Isolated.cmd",
+    "README-zh-CN.md",
+    "build_manifest.json",
+    "GODOT-LICENSE.txt",
+    "GODOT-THIRD-PARTY.json",
+    "NINJA-ADVENTURE-CC0.txt",
+    "NINJA-ADVENTURE-AUTHORS.md",
+    "SHA256SUMS.txt"
+  ],
+  "zip_crc_and_file_sha256_verified": true,
+  "checks_passed": 1794,
+  "realtime_seeds": 5,
+  "normal_network_checks": 149,
+  "fault_network_checks": 179,
+  "export_checks": 37,
+  "clean_success_logs": 35,
+  "full_p8_acceptance": false,
+  "pending": [
+    "save and host frame-time targets",
+    "reference 8 GB hardware",
+    "manual seven-day release playthrough",
+    "cross-device LAN"
+  ]
+}

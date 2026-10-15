@@ -1,0 +1,47 @@
+{
+	"four": {
+		"json_bytes": 377700,
+		"restored": true,
+		"save_ms": {
+			"max": 160.224,
+			"median": 133.143,
+			"min": 90.586,
+			"p95": 160.224
+		},
+		"simulate_minute_ms": {
+			"max": 11.591,
+			"median": 8.765,
+			"min": 6.878,
+			"p95": 11.591
+		}
+	},
+	"hardware": {
+		"cpu": "11th Gen Intel(R) Core(TM) i7-1165G7 @ 2.80GHz",
+		"engine": "4.7.2-stable (official)",
+		"logical_cpus": 8,
+		"memory": {
+			"available": 45406806016,
+			"free": 16348078080,
+			"physical": 42722451456,
+			"stack": 8388608
+		},
+		"os": "Windows"
+	},
+	"scope": "Seed 17 default populations; main-thread record + durable journal/head/primary, 12 commits each; simulation 60 game seconds each; not a GPU frame-rate test.",
+	"single": {
+		"json_bytes": 208091,
+		"restored": true,
+		"save_ms": {
+			"max": 133.161,
+			"median": 121.165,
+			"min": 73.276,
+			"p95": 133.161
+		},
+		"simulate_minute_ms": {
+			"max": 6.7,
+			"median": 4.344,
+			"min": 3.217,
+			"p95": 6.7
+		}
+	}
+}

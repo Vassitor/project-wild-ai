@@ -1,0 +1,37 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+host UDP port 56801
+host 437 ms PASS combat room created
+host status 房间已创建，等待队员
+host 462 ms PASS loopback combat host
+host peer connected 1143625969
+host 2849 ms PASS combat guest handshakes
+host 3065 ms PASS guest learns before departure
+host request start => OK
+host 3285 ms PASS room starts locked animal party scaling
+host 3286 ms PASS two person population
+host 5178 ms PASS remote projectile hunts real rabbit
+host 5965 ms PASS guest confirms loot / replay
+host 5965 ms PASS lost request / replay consumes one arrow
+host 5965 ms PASS one private loot set
+host 5965 ms PASS guest authoritative progression
+host 5965 ms PASS no teammate experience
+host 5966 ms PASS arrow passes teammate without PvP
+host 12224 ms PASS client combat skill menu does not pause host time
+host status client 断线，角色留在原地
+host 12496 ms PASS original guest disconnects
+host 12529 ms PASS offline wolf fixture saved
+host 12720 ms PASS offline character still attacked by host AI
+host 12720 ms PASS armor reduces actual offline attack / wears
+host 12747 ms PASS combat offline checkpoint
+host peer connected 484668458
+host 12933 ms PASS original combat guest reconnects
+host 13179 ms PASS client confirms retained body / growth
+host 13180 ms PASS no extra character or ammo on reconnect
+host 13277 ms PASS actual JSON animal / projectile / body restore
+host 13282 ms PASS death and growth do not reset on load
+host 13642 ms PASS combat end agreement
+host 13678 ms PASS combat room saved / ended
+host status client 断线，角色留在原地
+host transport status 2, peers [], sent 117, received 155
+P6 ENet host: 26 passed, 0 failed

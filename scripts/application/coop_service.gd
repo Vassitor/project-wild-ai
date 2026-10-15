@@ -38,8 +38,12 @@ func create(host: String, nickname: String, seed_text: String, token: String) ->
 	return result
 
 func restore(raw: Dictionary, host: String) -> WildOperationResult:
+	if not raw.get("lifecycle",{}) is Dictionary or (not raw.get("lifecycle",{}).is_empty()) != uses_personal_profiles(): return WildOperationResult.reject(&"WRONG_ROOM_MODE")
 	var restored: WildCoopState = WildCoopCodec.decode(raw,_config,_catalog,_content)
 	if restored == null or restored.host_id != host: return WildOperationResult.reject(&"INVALID_SAVE")
+	if restored.started and WildCombatWorld.initialize(restored.members[host],_config,restored.members.size()):
+		var migrated: WildOperationResult = _save.call(restored.record(),false)
+		if not migrated.successful: return migrated
 	# 网络连接不会随存档恢复；原成员的角色、位置与物资完整保留。
 	state = restored
 	online.clear()
@@ -53,7 +57,7 @@ func join(actor: String, nickname: String, token: String) -> WildOperationResult
 		online[actor] = true
 		return WildOperationResult.accept({"reconnected":true,"token":token})
 	if state.started: return WildOperationResult.reject(&"ROSTER_LOCKED")
-	if state.members.size() >= 2: return WildOperationResult.reject(&"ROOM_FULL")
+	if state.members.size() >= maximum_members(): return WildOperationResult.reject(&"ROOM_FULL")
 	if actor.is_empty() or actor.length() > 128 or nickname.is_empty() or nickname.length() > 32: return WildOperationResult.reject(&"INVALID_REQUEST")
 	var secret: String = WildStableId.create("reconnect") + WildStableId.create("secret")
 	var candidate: WildCoopState = state.copy(_config)
@@ -63,6 +67,13 @@ func join(actor: String, nickname: String, token: String) -> WildOperationResult
 		online[actor] = true
 		return WildOperationResult.accept({"reconnected":false,"token":secret})
 	return result
+
+## 验证房间保留双人上限；完整合作服务覆盖此容量策略。
+func maximum_members() -> int:
+	return 2
+
+func uses_personal_profiles() -> bool:
+	return false
 
 func _add_member(room: WildCoopState, actor: String, nickname: String, token: String) -> void:
 	room.members[actor] = WildBaseState.new(actor,_config)
@@ -160,10 +171,12 @@ func _execute(room: WildCoopState, actor: String, operation: String, data: Dicti
 		if actor != room.host_id: return WildOperationResult.reject(&"HOST_ONLY")
 		if room.started or room.members.size() != 2 or online.values().count(true) != 2: return WildOperationResult.reject(&"ROOM_NOT_READY")
 		room.started = true
+		WildCombatWorld.initialize(room.members[room.host_id],_config,room.members.size())
 		return WildOperationResult.accept()
 	if not room.started or room.survival.outcome != "running" or room.survival.bodies[actor].hp <= 0: return WildOperationResult.reject(&"INVALID_PHASE")
 	var personal: WildBaseState = room.members[actor]
 	match operation:
+		"combat.attack": return WildCombatRules.attack(personal,actor,data,_config,_catalog)
 		"skill.unlock":
 			if room.survival.actions.has(actor): return WildOperationResult.reject(&"ACTION_BUSY")
 			return WildSkillRules.learn(personal,data,_config.skill_rules,false)
@@ -277,7 +290,8 @@ func snapshot(actor: String, include_world: bool = false) -> Dictionary:
 	result["buildings"] = WildProgressionView.buildings(state.survival)
 	result["currency"] = personal.currency
 	result["can_train"] = not state.started
-	result["prey"] = state.survival.prey.duplicate(true)
+	result["prey"] = WildCombatView.animals(state.survival)
+	result.merge(WildCombatView.create(personal,actor))
 	for id: String in state.survival.outputs:
 		if state.survival.outputs[id]["owner"] == actor: result["outputs"][id] = state.survival.outputs[id].duplicate(true)
 	if include_world: result["world"] = state.world.record()

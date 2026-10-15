@@ -1,0 +1,62 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+p1 PASS isolated personal kit saved
+p1 PASS personal base opens
+p1 正在连接房主…
+p1 PASS real client connects
+p1 已进入共享荒野
+p1 PASS private welcome received
+p1 PASS personal departure lease submitted
+p1 PASS host accepted actual inventory
+p1 request room.ready => OK
+p1 PASS client ready
+p1 telemetry 4817 phase lobby queue 1 pending []
+p1 PASS received authoritative scaled map / hash
+p1 PASS all four running
+p1 PASS four players synchronized
+p1 PASS private inventory excludes permanent warehouse
+p1 PASS other player private items hidden
+p1 request combat.damage => UNKNOWN_COMMAND
+p1 PASS client has no damage endpoint
+p1 PASS practice stage ready
+p1 request survival.start => OK
+p1 PASS bound client gathering command
+p1 PASS effective practice delivered to permanent local skill profile
+p1 PASS host durable crash point
+p1 房主已断开；可使用原身份重连
+p1 PASS actual old host process disconnected
+p1 PASS host crash retains escrow
+p1 PASS new host process ready
+p1 正在连接房主…
+p1 PASS original token joins restored process
+p1 已进入共享荒野
+p1 PASS restored private snapshot
+p1 PASS process restart does not copy second kit
+p1 PASS cross-process world / permanent skill growth retained
+p1 telemetry 14828 phase running queue 2 pending []
+p1 PASS public race stage
+p1 PASS near public box synchronized
+p1 request inventory.transfer => STALE_VERSION
+p1 PASS race either single success or explicit stale version
+p1 PASS gift stage
+p1 request gift.offer => OK
+p1 PASS giver submits explicit offer
+p1 PASS four member sleep stage
+p1 telemetry 24839 phase running queue 2 pending ["sleep-vote:p1"]
+p1 request sleep.vote => OK
+p1 PASS client agrees same sleep duration
+p1 PASS host shared interruption committed
+p1 PASS client sees entire group awake
+p1 PASS offline member stage
+p1 PASS corpse stage
+p1 PASS near corpse view
+p1 request inventory.transfer => OK
+p1 PASS actual corpse withdrawal
+p1 PASS terminal world reached
+p1 PASS personal terminal receipt committed
+p1 PASS dead / living rewards independently correct
+p1 PASS actual JSON personal reward restores once
+p1 房主已保存并结束房间
+p1 PASS normal host ending delivered
+p1 PASS terminal resend cannot duplicate currency
+P6.5 p1 network checks: 43 passed, 0 failed

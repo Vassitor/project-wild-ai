@@ -8,6 +8,10 @@ var _config: WildGameConfig
 var _catalog: WildItemCatalog
 var _positions: Dictionary[String, Vector2] = {}
 var _targets: Dictionary[String, Vector2] = {}
+var _prediction_world: WildWorldData
+var _prediction_key: String = ""
+var _prediction_steps: Array[Dictionary] = []
+var materials_box: String = ""
 
 func configure(room_network: WildENetRoom, actor: String, config: WildGameConfig, catalog: WildItemCatalog) -> void:
 	network = room_network
@@ -27,17 +31,34 @@ func _on_snapshot(data: Dictionary) -> void:
 		var raw: Array = data["players"][id]["position"]
 		_targets[id] = Vector2(raw[0],raw[1])
 		if not _positions.has(id): _positions[id] = _targets[id]
+	if network.full_cooperation and data.get("players",{}).has(actor_id):
+		var key: String = data.get("cooperation",{}).get("world_hash","")+str(data.get("run_id",""))
+		if _prediction_key != key and not data.get("world",{}).is_empty():
+			_prediction_world = WildWorldCodec.decode(data["world"],_config)
+			_prediction_key = key
+		if _prediction_world != null:
+			_prediction_world.blocked_cells = world_dynamic(actor_id).get("blocked_cells",{}).duplicate()
+			_prediction_world.players[actor_id] = _targets[actor_id]
+			var ack: int = int(data.get("input_ack",-1))
+			_prediction_steps = _prediction_steps.filter(func(step: Dictionary) -> bool: return int(step["sequence"]) > ack)
+			for step: Dictionary in _prediction_steps: _predict(step)
+			_positions[actor_id] = _prediction_world.players[actor_id]
 	world_content_changed.emit()
 	base_state_changed.emit()
 
 func interpolate(seconds: float) -> void:
 	for id: String in _targets:
+		if id == actor_id and network.full_cooperation: continue
 		var distance: float = _positions[id].distance_to(_targets[id])
 		_positions[id] = _targets[id] if distance > 96 else _positions[id].lerp(_targets[id],1-exp(-15*seconds))
 
 func reset_view() -> void:
 	_positions.clear()
 	_targets.clear()
+	_prediction_steps.clear()
+	_prediction_world = null
+	_prediction_key = ""
+	materials_box = ""
 
 func world_snapshot(_actor_id: String) -> Dictionary:
 	return network.latest.get("world",{}).duplicate(true)
@@ -67,10 +88,24 @@ func preview_transfer(actor: String, payload: Dictionary) -> WildOperationResult
 		personal.containers[id] = box
 	return WildInventoryRules.transfer(personal,_catalog,_config,actor,payload)
 
-func move_world_player(actor: String, direction: Vector2, _seconds: float, sprint: bool) -> Vector2:
+func move_world_player(actor: String, direction: Vector2, seconds: float, sprint: bool) -> Vector2:
 	if actor == actor_id:
-		network.set_input(direction if active_station().is_empty() else Vector2.ZERO,sprint)
+		var allowed: bool = active_station().is_empty()
+		if network.full_cooperation: allowed = allowed and network.latest.get("cooperation",{}).get("phase","") == "running" and network.latest.get("action",{}).is_empty() and player_snapshot(actor).get("health_points",0) > 0
+		var intended: Vector2 = direction if allowed else Vector2.ZERO
+		network.set_input(intended,sprint)
+		if network.full_cooperation and _prediction_world != null:
+			var step: Dictionary = {"direction":intended,"seconds":minf(seconds,0.1),"sprint":sprint,"sequence":network._sequence+1}
+			_prediction_steps.append(step)
+			while _prediction_steps.size() > 60: _prediction_steps.pop_front()
+			_predict(step)
+			_positions[actor_id] = _prediction_world.players[actor_id]
 	return world_position(actor)
+
+func _predict(step: Dictionary) -> void:
+	var speeds: Dictionary = network.latest.get("movement_speed",{})
+	var kind: String = "exhausted" if player_snapshot(actor_id).get("stamina",0) <= 0 else ("sprint" if step["sprint"] else "walk")
+	WildWorldRules.move(_prediction_world,actor_id,step["direction"],step["seconds"],float(speeds.get(kind,_config.walking_speed_pixels_per_second)))
 
 func world_dynamic(_actor_id: String) -> Dictionary:
 	var raw: Dictionary = network.latest
@@ -80,7 +115,7 @@ func world_dynamic(_actor_id: String) -> Dictionary:
 		var bounds: Rect2i = WildBuildingRules.occupied(building)
 		for y: int in range(bounds.position.y,bounds.end.y):
 			for x: int in range(bounds.position.x,bounds.end.x): blocked[Vector2i(x,y)] = true
-	return {"resources":raw["resources"],"buildings":raw["buildings"],"outputs":raw["outputs"],"blocked_cells":blocked,"prey":raw.get("prey",{})}
+	return {"resources":raw["resources"],"buildings":raw["buildings"],"outputs":raw["outputs"],"blocked_cells":blocked,"prey":raw.get("prey",{}),"projectiles":raw.get("projectiles",{}),"tracks":raw.get("tracks",[]),"feedback":raw.get("feedback",{}),"combat_time":raw.get("combat_time",0),"corpses":raw.get("cooperation",{}).get("dead",{})}
 
 func player_snapshot(actor: String) -> Dictionary:
 	return network.latest.get("players",{}).get(actor,{}).get("body",{}).duplicate(true)
@@ -107,5 +142,7 @@ func submit(command: WildGameCommand) -> WildOperationResult:
 		_active_station = &""
 		station_closed.emit()
 		return WildOperationResult.accept()
-	var id: String = network.request(str(command.operation),command.payload,command.request_id)
+	var payload: Dictionary = command.payload.duplicate(true)
+	if network.full_cooperation and command.operation == &"survival.start" and payload.get("action","") in WildCoopMaterials.ACTIONS and not materials_box.is_empty(): payload["materials_box"] = materials_box
+	var id: String = network.request(str(command.operation),payload,command.request_id)
 	return WildOperationResult.new(false,&"PENDING",{"request_id":id}) if not id.is_empty() else WildOperationResult.reject(&"NOT_CONNECTED")

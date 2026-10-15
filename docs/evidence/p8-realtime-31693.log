@@ -1,0 +1,21 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+P8 realtime seed 31693: 0.65 h, HP 100.0, water 96.7
+P8 realtime seed 31693: 1.44 h, HP 100.0, water 92.9
+P8 realtime seed 31693: 2.23 h, HP 100.0, water 89.1
+P8 realtime seed 31693: 3.16 h, HP 100.0, water 83.9
+P8 realtime seed 31693: 4.11 h, HP 100.0, water 78.5
+P8 realtime seed 31693: 24.72 h, HP 100.0, water 82.4
+P8 realtime seed 31693: 37.48 h, HP 100.0, water 54.7
+P8 realtime seed 31693: 50.00 h, HP 100.0, water 74.2
+P8 realtime seed 31693: 58.78 h, HP 100.0, water 54.4
+P8 realtime seed 31693: 75.35 h, HP 100.0, water 66.3
+P8 realtime seed 31693: 76.15 h, HP 100.0, water 62.8
+P8 realtime seed 31693: 96.80 h, HP 100.0, water 67.0
+P8 realtime seed 31693: 97.58 h, HP 100.0, water 63.6
+P8 realtime seed 31693: 122.21 h, HP 100.0, water 59.4
+P8 realtime seed 31693: 122.98 h, HP 100.0, water 97.1
+P8 realtime seed 31693: 139.70 h, HP 100.0, water 61.7
+P8 realtime seed 31693: 148.41 h, HP 100.0, water 89.7
+P8 realtime seed 31693: 149.14 h, HP 100.0, water 86.6
+P8 realtime journey {"active_game_seconds":49380.2001991271,"default_clock":120,"elapsed_seconds":604800.0,"failure":"","hp":100.0,"scope":"30 FPS headless automatic driver, actual frame delta, only legal sleep skips; not manual playtest","seed":"31693","sleep_game_seconds":555419.799800873,"wall_seconds":562.169,"won":true}

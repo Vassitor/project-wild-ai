@@ -26,6 +26,7 @@ static func decode(data: Dictionary, owner: String, config: WildGameConfig, cata
 		var summary: Dictionary = state.last_settlement
 		if not summary.get("run_id",null) is String or summary["run_id"].is_empty() or not summary.get("won",null) is bool or not summary.get("reason",null) is String: return null
 		if not whole(summary.get("reward",null)) or summary["reward"] < 0 or not number(summary.get("elapsed_seconds",null)) or summary["elapsed_seconds"] < 0 or not whole(summary.get("pending_count",null)) or summary["pending_count"] < 0: return null
+		if summary.has("report") and not WildExpeditionReport.valid(summary["report"],int(summary["reward"]),summary["won"]): return null
 	var records: Dictionary = data["containers"]
 	if records.size() != state.containers.size():
 		return null
@@ -99,6 +100,7 @@ static func decode(data: Dictionary, owner: String, config: WildGameConfig, cata
 				return null
 		elif state.active_run.has("world"):
 			return null
+	if not WildCoopProfileRules.restore(data.get("cooperation",null),state,config,catalog): return null
 	return state
 
 

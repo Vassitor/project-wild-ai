@@ -28,6 +28,7 @@ extends Resource
 @export_group("Body")
 @export var health_rules: WildHealthConfig = WildHealthConfig.new()
 @export var skill_rules: WildSkillCatalog = WildSkillCatalog.new()
+@export var combat_rules: WildCombatConfig = WildCombatConfig.new()
 @export var initial_stat_value: float = 100.0
 ## 顺序固定为碳水、脂肪、蛋白质、矿物质、维生素；单位为每游戏小时。
 @export var nutrition_consumption_per_hour: PackedFloat32Array = PackedFloat32Array([4.0, 1.5, 2.0, 1.2, 1.0])
@@ -63,6 +64,7 @@ extends Resource
 ## 在启动时拒绝无效配置；不默默纠正会改变玩法的参数。
 func validate() -> PackedStringArray:
 	var errors := PackedStringArray()
+	if combat_rules == null or not combat_rules.validate(): errors.append("动物与武器配置无效。")
 	if skill_rules == null or not skill_rules.validate(): errors.append("技能节点、成本或经验配置无效。")
 	if health_rules == null or not health_rules.validate(): errors.append("身体阈值、时间、概率或恢复系数无效。")
 	if game_seconds_per_real_second <= 0.0 or simulation_step_seconds <= 0.0 or target_survival_hours <= 0.0:

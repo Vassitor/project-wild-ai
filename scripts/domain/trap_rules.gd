@@ -38,6 +38,11 @@ static func tick(building: Dictionary, run: WildSurvivalState, world: WildWorldD
 		changed = true
 		if success:
 			run.prey[id]["alive"] = false
+			if run.combat_initialized:
+				run.prey[id]["hp"] = 0.0
+				run.prey[id]["mode"] = "dead"
+				run.prey[id]["target"] = ""
+				run.prey[id]["loot_claimed"] = true
 			building["uses_left"] -= 1
 			building["capture"] = {"prey_id":id,"kind":run.prey[id]["kind"],"captured_at":checked_at}
 	return changed

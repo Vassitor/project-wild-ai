@@ -1,0 +1,41 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+client UDP port 49690
+client status 正在连接房主…
+client 3 ms PASS combat client connects
+client peer connected 1
+client status 已进入共享荒野
+client 187 ms PASS receives actual world
+client request learn => OK
+client 321 ms PASS client personal bow skill
+client 787 ms PASS receives hunt stage
+client 788 ms PASS AI RNG hidden from client
+client request shot => OK
+client 923 ms PASS bound directional attack despite forged damage / actor
+client 2485 ms PASS arrow kill growth reaches client
+client request shot => OK
+client 2552 ms PASS same shot receipt replay
+client 2553 ms PASS client ammo / one loot
+client request forged-damage => UNKNOWN_COMMAND
+client 2649 ms PASS no client damage endpoint
+client request hunt-checked => OK
+client 2880 ms PASS cooperative menu stage
+client 8937 ms PASS actual cooperative K panel continues simulation
+client request menu-checked => OK
+client 9129 ms PASS disconnect stage
+client status 房主已断开；可使用原身份重连
+client 9594 ms PASS host progressed offline threat
+client status 正在连接房主…
+client 9594 ms PASS original identity joins again
+client peer connected 1
+client status 已进入共享荒野
+client 9749 ms PASS new welcome after reconnect
+client 9749 ms PASS growth and ammo retained
+client 9749 ms PASS offline armor / injury retained
+client request reconnected-check => OK
+client 10082 ms PASS finish stage
+client request ready-end => OK
+client 10205 ms PASS last operation confirmed
+client 10205 ms PASS saved room ending received
+client transport status 2, peers [1], sent 206, received 101
+P6 ENet client: 21 passed, 0 failed

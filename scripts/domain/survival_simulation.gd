@@ -23,6 +23,7 @@ static func process(state: WildBaseState, config: WildGameConfig, catalog: WildI
 	if WildProgressionWorld.initialize(state,content): events["world_changed"] = true
 	while run.pending_seconds > 0.000001 and run.outcome == "running":
 		var step: float = minf(config.simulation_step_seconds, config.target_survival_hours * 3600 - run.elapsed_seconds)
+		if WildCombatRules.needs_small_step(state): step = minf(step,0.1*config.game_seconds_per_real_second)
 		for action: Dictionary in run.actions.values(): step = minf(step,action["remaining"])
 		if not force and run.pending_seconds + 0.000001 < step: break
 		step = minf(step,run.pending_seconds)
@@ -54,6 +55,19 @@ static func process(state: WildBaseState, config: WildGameConfig, catalog: WildI
 		if WildProgressionWorld.tick(state,actor_states,content,config):
 			events["world_changed"] = true
 			events["save"] = true
+		var sleeping: Array[String] = []
+		for actor: String in run.actions:
+			if run.actions[actor]["type"] == "sleep": sleeping.append(actor)
+		if WildCombatRules.tick(state,actor_states,config,catalog,content,step):
+			events["save"] = true
+		for actor: String in sleeping:
+			if not run.actions.has(actor):
+				events["sleep_interrupted"] = true
+				# 单机提前醒来不能继续消费尚未模拟的跳时；合作睡眠投票另由 P6.5 协调。
+				if actor_states.is_empty():
+					run.pending_seconds = 0
+					run.segments.clear()
+		if run.combat_initialized: events["world_changed"] = true
 		# 完成同一时刻的消耗与危急判断后，才允许产出 / 胜利；结束后动作无产出。
 		var all_dead: bool = true
 		for body: WildBodyState in run.bodies.values():
@@ -100,11 +114,14 @@ static func sleep(state: WildBaseState, actor: String, config: WildGameConfig, c
 
 static func explore(state: WildBaseState, actor: String) -> void:
 	var world: WildWorldData = state.world
+	if not state.survival.explored_by_actor.has(actor): state.survival.explored_by_actor[actor] = {}
 	var cell: Vector2i = world.cell_at(world.players[actor])
 	for y: int in range(cell.y-3,cell.y+4):
 		for x: int in range(cell.x-3,cell.x+4):
 			var point := Vector2i(x,y)
-			if world.contains(point) and world.tiles[y*world.size.x+x] != WildWorldData.Terrain.WATER: state.survival.explored["%d:%d" % [x,y]] = true
+			if world.contains(point) and world.tiles[y*world.size.x+x] != WildWorldData.Terrain.WATER:
+				state.survival.explored["%d:%d" % [x,y]] = true
+				state.survival.explored_by_actor[actor]["%d:%d" % [x,y]] = true
 
 static func _age_items(state: WildBaseState, catalog: WildItemCatalog, seconds: float, age_outputs: bool = true) -> void:
 	for container: WildInventoryContainer in state.containers.values():
